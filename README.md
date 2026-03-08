@@ -1,1 +1,1 @@
-# new-app
+# new-app git hub kullanmayı ve kültürünü öğrneiyoruz
