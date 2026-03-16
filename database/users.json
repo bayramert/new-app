@@ -1,0 +1,22 @@
+{
+  "users": [
+    {
+      "id": 1773658717513,
+      "username": "mert",
+      "email": "mert@gmail.com",
+      "password": "$2a$10$93BACjWr7S7E306EpEujr.bTun6ISBvr6lKaoRQvPzgtr4LSHlKHW",
+      "role": "user",
+      "total_score": 0,
+      "created_at": "2026-03-16T10:58:37.513Z"
+    },
+    {
+      "id": 1773658754676,
+      "username": "mert1",
+      "email": "mert1@gmail.com",
+      "password": "$2a$10$PTQvB0wgNss92pIQperp5OtQxAade6ePPQ3kzAs1gu/jqVIy9izVu",
+      "role": "user",
+      "total_score": 0,
+      "created_at": "2026-03-16T10:59:14.676Z"
+    }
+  ]
+}
