@@ -1,59 +1,51 @@
-// Şifre hashleme kütüphanesini dahil et
 const bcrypt = require('bcryptjs');
-
-// JSON okuma/yazma fonksiyonlarını al
 const { readDB, writeDB } = require('../config/db');
 
-
-// ───────────────────────────────────────
+// ───────────────────────────────
 // KAYIT OL
-// ───────────────────────────────────────
+// ───────────────────────────────
 async function register(req, res) {
 
-  // Frontend'den gelen form verilerini al
-  const { username, email, password } = req.body;
+  // Yeni alanları al: ad, soyad, kullanıcı adı, email, şifre
+  const { firstName, lastName, username, email, password } = req.body;
 
-  // Herhangi bir alan boşsa hata dön ve işlemi durdur
-  if (!username || !email || !password)
+  // Tüm alanlar dolu mu kontrol et
+  if (!firstName || !lastName || !username || !email || !password)
     return res.status(400).json({ message: 'Tüm alanları doldur.' });
 
-  // Şifre 6 karakterden kısaysa hata dön
   if (password.length < 6)
     return res.status(400).json({ message: 'Şifre en az 6 karakter olmalı.' });
 
+  if (!email.includes('@') || !email.includes('.'))
+    return res.status(400).json({ message: 'Geçerli bir email gir.' });
+
   try {
-    // users.json dosyasını oku
     const db = readDB();
 
-    // Bu email veya kullanıcı adıyla daha önce kayıt olunmuş mu ara
-    const existing = db.users.find(u => u.email === email || u.username === username);
-
-    // Bulunduysa 409 (çakışma) kodu ile hata dön
+    // Email veya kullanıcı adı daha önce alınmış mı kontrol et
+    const existing = db.users.find(
+      u => u.email === email || u.username === username
+    );
     if (existing)
       return res.status(409).json({ message: 'Bu email veya kullanıcı adı zaten kullanılıyor.' });
 
-    // Şifreyi hashle, 10 güvenlik seviyesi (standart değer)
-    // await: bu işlem biraz zaman aldığı için bekle
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // Yeni kullanıcı objesi oluştur
     const newUser = {
-      id: Date.now(),           // O anki zaman milisaniye cinsinden, benzersiz id olarak kullanıyoruz
-      username,
-      email,
-      password: hashedPassword, // Şifrenin kendisini değil, hashlenmiş halini kaydet
-      role: 'user',             // Varsayılan rol user, adminler manuel atanır
-      total_score: 0,           // Başlangıç puanı 0
-      created_at: new Date().toISOString(), // Kayıt tarihi
+      id: Date.now(),
+      firstName,                // Ad
+      lastName,                 // Soyad
+      username,                 // Kullanıcı adı
+      email,                    // Email
+      password: hashedPassword, // Hashlenmiş şifre
+      role: 'user',
+      total_score: 0,
+      created_at: new Date().toISOString(),
     };
 
-    // Kullanıcıyı listeye ekle
     db.users.push(newUser);
-
-    // Listeyi users.json dosyasına yaz
     writeDB(db);
 
-    // 201 = başarıyla oluşturuldu, frontend bu mesajı ekranda gösterir
     return res.status(201).json({ message: 'Kayıt başarılı! Giriş yapabilirsin.' });
 
   } catch (err) {
@@ -62,49 +54,45 @@ async function register(req, res) {
   }
 }
 
-
-// ───────────────────────────────────────
+// ───────────────────────────────
 // GİRİŞ YAP
-// ───────────────────────────────────────
+// ───────────────────────────────
 async function login(req, res) {
 
-  // Frontend'den gelen email ve şifreyi al
-  const { email, password } = req.body;
+  // identifier: email veya kullanıcı adı olabilir
+  const { identifier, password } = req.body;
 
-  // Boş alan kontrolü
-  if (!email || !password)
-    return res.status(400).json({ message: 'Email ve şifre gerekli.' });
+  if (!identifier || !password)
+    return res.status(400).json({ message: 'Tüm alanları doldur.' });
 
   try {
-    // users.json dosyasını oku
     const db = readDB();
 
-    // Bu emaile sahip kullanıcıyı listede ara
-    const user = db.users.find(u => u.email === email);
+    // identifier'ın @ içerip içermediğine göre email mi username mi olduğuna karar ver
+    // @ varsa email olarak ara, yoksa username olarak ara
+    const user = identifier.includes('@')
+      ? db.users.find(u => u.email === identifier)
+      : db.users.find(u => u.username === identifier);
 
-    // Kullanıcı bulunamadıysa 401 dön
-    // "Email bulunamadı" demiyoruz, güvenlik için ikisini aynı mesajla gösteriyoruz
+    // Kullanıcı bulunamadıysa güvenlik için hangi alanın yanlış olduğunu söyleme
     if (!user)
-      return res.status(401).json({ message: 'Email veya şifre hatalı.' });
+      return res.status(401).json({ message: 'Bilgiler hatalı.' });
 
-    // Girilen şifreyi, veritabanındaki hashlenmiş şifreyle karşılaştır
     const isMatch = await bcrypt.compare(password, user.password);
-
-    // Şifre yanlışsa 401 dön
     if (!isMatch)
-      return res.status(401).json({ message: 'Email veya şifre hatalı.' });
+      return res.status(401).json({ message: 'Bilgiler hatalı.' });
 
-    // Doğruysa kullanıcı bilgisini session'a yaz
-    // Şifreyi buraya koymuyoruz, güvenlik için
+    // Session'a kullanıcı bilgilerini yaz (şifre hariç)
     req.session.user = {
       id: user.id,
+      firstName: user.firstName,
+      lastName: user.lastName,
       username: user.username,
       email: user.email,
       role: user.role,
       total_score: user.total_score,
     };
 
-    // Frontend'e başarı mesajı ve kullanıcı bilgisini gönder
     return res.status(200).json({ message: 'Giriş başarılı!', user: req.session.user });
 
   } catch (err) {
@@ -113,37 +101,24 @@ async function login(req, res) {
   }
 }
 
-
-// ───────────────────────────────────────
+// ───────────────────────────────
 // ÇIKIŞ YAP
-// ───────────────────────────────────────
+// ───────────────────────────────
 function logout(req, res) {
-
-  // Session'ı tamamen sil
   req.session.destroy((err) => {
     if (err) return res.status(500).json({ message: 'Çıkış yapılamadı.' });
-
-    // Tarayıcıdaki session cookie'sini de temizle
     res.clearCookie('connect.sid');
-
     return res.status(200).json({ message: 'Çıkış yapıldı.' });
   });
 }
 
-
-// ───────────────────────────────────────
+// ───────────────────────────────
 // KİM GİRİŞ YAPMIŞ?
-// ───────────────────────────────────────
+// ───────────────────────────────
 function me(req, res) {
-
-  // Session'da kullanıcı varsa bilgileri dön
-  // Frontend sayfa yüklenince bunu çağırır, kullanıcı hala giriş yapmış mı kontrol eder
   if (req.session && req.session.user)
     return res.status(200).json({ user: req.session.user });
-
-  // Yoksa 401 dön
   return res.status(401).json({ message: 'Giriş yapılmamış.' });
 }
 
-// Dört fonksiyonu dışarıya aktar
 module.exports = { register, login, logout, me };

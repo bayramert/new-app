@@ -15,6 +15,7 @@
       display: flex;
       align-items: center;
       justify-content: center;
+      padding: 20px;
     }
 
     .container {
@@ -27,21 +28,10 @@
       box-shadow: 0 8px 32px rgba(0,0,0,0.4);
     }
 
-    h1 {
-      text-align: center;
-      font-size: 26px;
-      margin-bottom: 8px;
-      color: #fff;
-    }
+    h1 { text-align: center; font-size: 26px; margin-bottom: 8px; color: #fff; }
+    .subtitle { text-align: center; color: #888; font-size: 14px; margin-bottom: 28px; }
 
-    .subtitle {
-      text-align: center;
-      color: #888;
-      font-size: 14px;
-      margin-bottom: 28px;
-    }
-
-    /* Tab butonları */
+    /* Sekme butonları */
     .tabs {
       display: flex;
       background: #0f0f1a;
@@ -49,95 +39,55 @@
       padding: 4px;
       margin-bottom: 28px;
     }
-
     .tab-btn {
-      flex: 1;
-      padding: 10px;
-      border: none;
-      background: transparent;
-      color: #888;
-      font-size: 14px;
-      font-weight: 600;
-      cursor: pointer;
-      border-radius: 6px;
-      transition: all 0.2s;
+      flex: 1; padding: 10px; border: none; background: transparent;
+      color: #888; font-size: 14px; font-weight: 600;
+      cursor: pointer; border-radius: 6px; transition: all 0.2s;
     }
+    .tab-btn.active { background: #6c63ff; color: #fff; }
 
-    .tab-btn.active {
-      background: #6c63ff;
-      color: #fff;
-    }
+    /* Ad soyad yan yana */
+    .form-row { display: flex; gap: 10px; margin-bottom: 14px; }
+    .form-row .form-group { flex: 1; margin-bottom: 0; }
 
-    /* Form */
-    .form-group {
-      margin-bottom: 16px;
-    }
-
-    label {
-      display: block;
-      font-size: 13px;
-      color: #aaa;
-      margin-bottom: 6px;
-    }
+    .form-group { margin-bottom: 16px; }
+    label { display: block; font-size: 13px; color: #aaa; margin-bottom: 6px; }
 
     input {
-      width: 100%;
-      padding: 12px 14px;
-      background: #0f0f1a;
-      border: 1px solid #2a2a4a;
-      border-radius: 8px;
-      color: #fff;
-      font-size: 14px;
-      outline: none;
+      width: 100%; padding: 12px 14px;
+      background: #0f0f1a; border: 1px solid #2a2a4a;
+      border-radius: 8px; color: #fff; font-size: 14px; outline: none;
       transition: border-color 0.2s;
     }
-
-    input:focus {
-      border-color: #6c63ff;
-    }
+    input:focus { border-color: #6c63ff; }
 
     .btn {
-      width: 100%;
-      padding: 13px;
-      background: #6c63ff;
-      color: #fff;
-      border: none;
-      border-radius: 8px;
-      font-size: 15px;
-      font-weight: 600;
-      cursor: pointer;
-      margin-top: 8px;
-      transition: background 0.2s;
+      width: 100%; padding: 13px; background: #6c63ff;
+      color: #fff; border: none; border-radius: 8px;
+      font-size: 15px; font-weight: 600; cursor: pointer;
+      margin-top: 8px; transition: background 0.2s;
     }
-
     .btn:hover { background: #574fd6; }
     .btn:disabled { background: #444; cursor: not-allowed; }
 
-    /* Mesaj kutusu */
-    .message {
-      margin-top: 14px;
-      padding: 10px 14px;
-      border-radius: 8px;
-      font-size: 13px;
-      display: none;
-    }
-
-    .message.success {
-      background: #1a3a2a;
-      border: 1px solid #2d6a4a;
-      color: #4eca8b;
-      display: block;
-    }
-
-    .message.error {
-      background: #3a1a1a;
-      border: 1px solid #6a2d2d;
-      color: #e07070;
-      display: block;
-    }
+    .message { margin-top: 14px; padding: 10px 14px; border-radius: 8px; font-size: 13px; display: none; }
+    .message.success { background: #1a3a2a; border: 1px solid #2d6a4a; color: #4eca8b; display: block; }
+    .message.error { background: #3a1a1a; border: 1px solid #6a2d2d; color: #e07070; display: block; }
 
     .form-panel { display: none; }
     .form-panel.active { display: block; }
+
+    /* Giriş formunda "veya" ayırıcı */
+    .divider {
+      text-align: center; color: #444; font-size: 12px;
+      margin: 4px 0 12px; position: relative;
+    }
+    .divider::before, .divider::after {
+      content: ''; position: absolute; top: 50%;
+      width: 42%; height: 1px; background: #2a2a4a;
+    }
+    .divider::before { left: 0; }
+    .divider::after { right: 0; }
   </style>
 </head>
 <body>
@@ -146,17 +96,18 @@
   <h1>🎮 Oyun Sitesi</h1>
   <p class="subtitle">Oyna, kazan, zirvede ol!</p>
 
-  <!-- Tab Butonları -->
+  <!-- Sekme butonları -->
   <div class="tabs">
     <button class="tab-btn active" onclick="switchTab('login')">Giriş Yap</button>
     <button class="tab-btn" onclick="switchTab('register')">Kayıt Ol</button>
   </div>
 
   <!-- GİRİŞ FORMU -->
+  <!-- Kullanıcı email VEYA kullanıcı adıyla giriş yapabilir -->
   <div id="login-panel" class="form-panel active">
     <div class="form-group">
-      <label>Email</label>
-      <input type="email" id="login-email" placeholder="ornek@mail.com">
+      <label>Email veya Kullanıcı Adı</label>
+      <input type="text" id="login-identifier" placeholder="ornek@mail.com veya kullanici123">
     </div>
     <div class="form-group">
       <label>Şifre</label>
@@ -167,10 +118,24 @@
   </div>
 
   <!-- KAYIT FORMU -->
+  <!-- Ad, soyad, kullanıcı adı, email, şifre -->
   <div id="register-panel" class="form-panel">
+
+    <!-- Ad ve soyad yan yana -->
+    <div class="form-row">
+      <div class="form-group">
+        <label>Ad</label>
+        <input type="text" id="reg-firstname" placeholder="Ali">
+      </div>
+      <div class="form-group">
+        <label>Soyad</label>
+        <input type="text" id="reg-lastname" placeholder="Yılmaz">
+      </div>
+    </div>
+
     <div class="form-group">
       <label>Kullanıcı Adı</label>
-      <input type="text" id="reg-username" placeholder="oyuncu123">
+      <input type="text" id="reg-username" placeholder="aliyilmaz">
     </div>
     <div class="form-group">
       <label>Email</label>
@@ -186,6 +151,12 @@
 </div>
 
 <script>
+  // Sayfa açılınca zaten giriş yapmışsa leaderboard'a gönder
+  fetch('/api/auth/me').then(r => {
+    if (r.ok) window.location.href = '/leaderboard.html';
+  });
+
+  // Sekme değiştirme
   function switchTab(tab) {
     document.querySelectorAll('.tab-btn').forEach((btn, i) => {
       btn.classList.toggle('active', (i === 0 && tab === 'login') || (i === 1 && tab === 'register'));
@@ -194,20 +165,22 @@
     document.getElementById('register-panel').classList.toggle('active', tab === 'register');
   }
 
+  // Mesaj kutusunu göster
   function showMessage(id, text, type) {
     const el = document.getElementById(id);
     el.textContent = text;
     el.className = 'message ' + type;
   }
 
+  // Giriş yap: email VEYA kullanıcı adı + şifre
   async function handleLogin() {
-    const email = document.getElementById('login-email').value.trim();
-    const password = document.getElementById('login-password').value;
-    const btn = document.getElementById('login-btn');
+    // Tek input'tan gelen değer email mi username mi backend halleder
+    const identifier = document.getElementById('login-identifier').value.trim();
+    const password   = document.getElementById('login-password').value;
+    const btn        = document.getElementById('login-btn');
 
-    if (!email || !password) {
-      return showMessage('login-message', 'Email ve şifre gerekli.', 'error');
-    }
+    if (!identifier || !password)
+      return showMessage('login-message', 'Tüm alanları doldur.', 'error');
 
     btn.disabled = true;
     btn.textContent = 'Giriş yapılıyor...';
@@ -216,18 +189,18 @@
       const res = await fetch('/api/auth/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password }),
+        // identifier olarak gönder, backend email mi username mi olduğunu anlar
+        body: JSON.stringify({ identifier, password }),
       });
-
       const data = await res.json();
 
       if (res.ok) {
         showMessage('login-message', data.message, 'success');
-        setTimeout(() => window.location.href = '/leaderboard.html', 1000);
+        setTimeout(() => window.location.href = '/leaderboard.html', 800);
       } else {
         showMessage('login-message', data.message, 'error');
       }
-    } catch (err) {
+    } catch {
       showMessage('login-message', 'Sunucuya bağlanılamadı.', 'error');
     } finally {
       btn.disabled = false;
@@ -235,15 +208,17 @@
     }
   }
 
+  // Kayıt ol: ad, soyad, kullanıcı adı, email, şifre
   async function handleRegister() {
-    const username = document.getElementById('reg-username').value.trim();
-    const email = document.getElementById('reg-email').value.trim();
-    const password = document.getElementById('reg-password').value;
-    const btn = document.getElementById('register-btn');
+    const firstName = document.getElementById('reg-firstname').value.trim();
+    const lastName  = document.getElementById('reg-lastname').value.trim();
+    const username  = document.getElementById('reg-username').value.trim();
+    const email     = document.getElementById('reg-email').value.trim();
+    const password  = document.getElementById('reg-password').value;
+    const btn       = document.getElementById('register-btn');
 
-    if (!username || !email || !password) {
+    if (!firstName || !lastName || !username || !email || !password)
       return showMessage('register-message', 'Tüm alanları doldur.', 'error');
-    }
 
     btn.disabled = true;
     btn.textContent = 'Kayıt yapılıyor...';
@@ -252,18 +227,17 @@
       const res = await fetch('/api/auth/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username, email, password }),
+        body: JSON.stringify({ firstName, lastName, username, email, password }),
       });
-
       const data = await res.json();
 
       if (res.ok) {
         showMessage('register-message', data.message, 'success');
-        setTimeout(() => switchTab('login'), 1500);
+        setTimeout(() => switchTab('login'), 1200);
       } else {
         showMessage('register-message', data.message, 'error');
       }
-    } catch (err) {
+    } catch {
       showMessage('register-message', 'Sunucuya bağlanılamadı.', 'error');
     } finally {
       btn.disabled = false;
@@ -271,13 +245,12 @@
     }
   }
 
-  // Enter tuşu desteği
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Enter') {
-      const activePanel = document.querySelector('.form-panel.active').id;
-      if (activePanel === 'login-panel') handleLogin();
-      else handleRegister();
-    }
+  // Enter tuşuna basınca aktif formu gönder
+  document.addEventListener('keydown', e => {
+    if (e.key !== 'Enter') return;
+    const active = document.querySelector('.form-panel.active').id;
+    if (active === 'login-panel') handleLogin();
+    else handleRegister();
   });
 </script>
 

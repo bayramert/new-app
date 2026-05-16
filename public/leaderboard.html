@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Oyun Sitesi - Sıralama</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Segoe UI', sans-serif; background: #0f0f1a; color: #e0e0e0; min-height: 100vh; }
+
+    /* Üst bar */
+    .topbar {
+      background: #1a1a2e;
+      border-bottom: 1px solid #2a2a4a;
+      padding: 14px 28px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .topbar-left h1 { font-size: 18px; color: #fff; }
+
+    /* Sağ üstteki kullanıcı bilgi kutusu */
+    .topbar-right { display: flex; align-items: center; gap: 12px; }
+    .user-info {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 2px;
+    }
+    .user-fullname {
+      font-size: 14px;
+      font-weight: 600;
+      color: #fff;
+    }
+    .user-meta {
+      font-size: 12px;
+      color: #888;
+    }
+    /* Puan rozeti */
+    .score-badge {
+      background: #2a2a4a;
+      border-radius: 20px;
+      padding: 5px 14px;
+      font-size: 13px;
+      color: #6c63ff;
+      font-weight: 600;
+    }
+    .logout-btn {
+      padding: 7px 16px;
+      background: transparent;
+      border: 1px solid #444;
+      border-radius: 8px;
+      color: #aaa;
+      font-size: 13px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .logout-btn:hover { border-color: #e07070; color: #e07070; }
+
+    /* İçerik alanı */
+    .main { max-width: 800px; margin: 40px auto; padding: 0 20px; }
+    .placeholder {
+      text-align: center;
+      color: #555;
+      font-size: 15px;
+      padding: 60px 0;
+    }
+  </style>
+</head>
+<body>
+
+<!-- Üst bar -->
+<div class="topbar">
+  <div class="topbar-left">
+    <h1>🎮 Oyun Sitesi</h1>
+  </div>
+  <div class="topbar-right">
+
+    <!-- Kullanıcı bilgileri: ad soyad, @kullanıcıadı ve email -->
+    <div class="user-info">
+      <span class="user-fullname" id="user-fullname">...</span>
+      <span class="user-meta" id="user-meta">...</span>
+    </div>
+
+    <!-- Toplam puan -->
+    <div class="score-badge" id="user-score">⭐ 0 puan</div>
+
+    <!-- Çıkış butonu -->
+    <button class="logout-btn" onclick="handleLogout()">Çıkış Yap</button>
+  </div>
+</div>
+
+<!-- Sayfa içeriği buraya gelecek -->
+<div class="main">
+  <div class="placeholder">🏆 Sıralama tablosu yakında burada olacak!</div>
+</div>
+
+<script>
+  // Sayfa açılınca oturum kontrolü yap
+  async function init() {
+    const res = await fetch('/api/auth/me');
+
+    // Giriş yapılmamışsa ana sayfaya gönder
+    if (!res.ok) { window.location.href = '/'; return; }
+
+    const data = await res.json();
+    const user = data.user;
+
+    // Sağ üste ad soyad yaz
+    document.getElementById('user-fullname').textContent =
+      (user.firstName || '') + ' ' + (user.lastName || '');
+
+    // @kullanıcıadı ve email yan yana göster
+    document.getElementById('user-meta').textContent =
+      '@' + user.username + ' · ' + user.email;
+
+    // Toplam puanı göster
+    document.getElementById('user-score').textContent =
+      '⭐ ' + (user.total_score || 0) + ' puan';
+  }
+
+  // Çıkış yap
+  async function handleLogout() {
+    await fetch('/api/auth/logout', { method: 'POST' });
+    window.location.href = '/';
+  }
+
+  init();
+</script>
+
+</body>
+</html>

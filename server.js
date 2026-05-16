@@ -1,19 +1,4 @@
-const express = require('express');
-const session = require('express-session');
-const path = require('path');
-
-const authRoutes = require('./src/routes/auth');
-
-const app = express();
-const PORT = 8080;
-
-// Middleware
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-
-// Session ayarları
-app.use(session({
-  secret: 'oyun_sitesi_gizli_anahtar',// Express kütüphanesini dahil et (web sunucusu için)
+// Express kütüphanesini dahil et (web sunucusu için)
 const express = require('express');
 
 // Session yönetimi için kütüphaneyi dahil et
@@ -71,28 +56,6 @@ app.get('/', (req, res) => {
 });
 
 // Sunucuyu başlat ve belirtilen portu dinle
-app.listen(PORT, () => {
-  console.log(`Sunucu çalışıyor: http://localhost:${PORT}`);
-});
-  resave: false,
-  saveUninitialized: false,
-  cookie: {
-    httpOnly: true,
-    maxAge: 1000 * 60 * 60 * 24, // 1 gün
-  },
-}));
-
-// Statik dosyalar
-app.use(express.static(path.join(__dirname, 'public')));
-
-// API Routes
-app.use('/api/auth', authRoutes);
-
-// Ana sayfa
-app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'index.html'));
-});
-
 app.listen(PORT, () => {
   console.log(`Sunucu çalışıyor: http://localhost:${PORT}`);
 });
