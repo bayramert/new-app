@@ -4,6 +4,13 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Oyun Sitesi - Sıralama</title>
+
+  <!-- Tarayıcının bu sayfayı cache'e almasını engelle -->
+  <!-- Geri tuşuyla girilince bile her seferinde sunucudan kontrol et -->
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
+
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body { font-family: 'Segoe UI', sans-serif; background: #0f0f1a; color: #e0e0e0; min-height: 100vh; }
@@ -19,7 +26,7 @@
     }
     .topbar-left h1 { font-size: 18px; color: #fff; }
 
-    /* Sağ üstteki kullanıcı bilgi kutusu */
+    /* Sağ üstteki kullanıcı bilgi alanı */
     .topbar-right { display: flex; align-items: center; gap: 12px; }
     .user-info {
       display: flex;
@@ -27,15 +34,9 @@
       align-items: flex-end;
       gap: 2px;
     }
-    .user-fullname {
-      font-size: 14px;
-      font-weight: 600;
-      color: #fff;
-    }
-    .user-meta {
-      font-size: 12px;
-      color: #888;
-    }
+    .user-fullname { font-size: 14px; font-weight: 600; color: #fff; }
+    .user-meta { font-size: 12px; color: #888; }
+
     /* Puan rozeti */
     .score-badge {
       background: #2a2a4a;
@@ -45,6 +46,7 @@
       color: #6c63ff;
       font-weight: 600;
     }
+
     .logout-btn {
       padding: 7px 16px;
       background: transparent;
@@ -59,12 +61,7 @@
 
     /* İçerik alanı */
     .main { max-width: 800px; margin: 40px auto; padding: 0 20px; }
-    .placeholder {
-      text-align: center;
-      color: #555;
-      font-size: 15px;
-      padding: 60px 0;
-    }
+    .placeholder { text-align: center; color: #555; font-size: 15px; padding: 60px 0; }
   </style>
 </head>
 <body>
@@ -96,21 +93,22 @@
 </div>
 
 <script>
-  // Sayfa açılınca oturum kontrolü yap
+  // Oturum kontrolü yap ve kullanıcı bilgilerini ekrana bas
   async function init() {
     const res = await fetch('/api/auth/me');
 
-    // Giriş yapılmamışsa ana sayfaya gönder
+    // Giriş yapılmamışsa veya session süresi dolmuşsa ana sayfaya gönder
     if (!res.ok) { window.location.href = '/'; return; }
 
     const data = await res.json();
     const user = data.user;
 
     // Sağ üste ad soyad yaz
+    // firstName veya lastName yoksa (eski kayıtlar) boş string kullan
     document.getElementById('user-fullname').textContent =
       (user.firstName || '') + ' ' + (user.lastName || '');
 
-    // @kullanıcıadı ve email yan yana göster
+    // @kullanıcıadı · email formatında göster
     document.getElementById('user-meta').textContent =
       '@' + user.username + ' · ' + user.email;
 
@@ -119,13 +117,26 @@
       '⭐ ' + (user.total_score || 0) + ' puan';
   }
 
-  // Çıkış yap
+  // Çıkış yap: session'ı sil, ana sayfaya dön
   async function handleLogout() {
     await fetch('/api/auth/logout', { method: 'POST' });
-    window.location.href = '/';
+
+    // replace: geri tuşuyla bu sayfaya dönülemesin
+    window.location.replace('/');
   }
 
+  // Sayfa ilk açılınca oturum kontrolü yap
   init();
+
+  // Geri tuşuyla cache'den dönüldüğünde de oturum kontrolü yap
+  // e.persisted: true ise sayfa cache'den yüklendi (geri tuşu) demektir
+  window.addEventListener('pageshow', (e) => {
+    if (e.persisted) {
+      // Cache'den geldiyse oturumu tekrar kontrol et
+      // Session yoksa init() ana sayfaya yönlendirir
+      init();
+    }
+  });
 </script>
 
 </body>
