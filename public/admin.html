@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Panel</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Segoe UI', sans-serif; background: #0f0f1a; color: #e0e0e0; min-height: 100vh; }
+    .topbar { background: #1a1a2e; border-bottom: 1px solid #2a2a4a; padding: 14px 28px; display: flex; justify-content: space-between; align-items: center; }
+    .topbar h1 { font-size: 18px; color: #fff; }
+    .nav { display: flex; gap: 10px; }
+    .btn, select { padding: 9px 12px; background: #0f0f1a; color: #fff; border: 1px solid #2a2a4a; border-radius: 8px; cursor: pointer; }
+    .btn.primary { background: #6c63ff; border-color: #6c63ff; }
+    .btn.danger { border-color: #8a3333; color: #ff8a8a; }
+    .btn.warn { border-color: #8a6a33; color: #ffd27a; }
+    .main { max-width: 1100px; margin: 32px auto; padding: 0 20px; display: grid; gap: 20px; }
+    .panel { background: #1a1a2e; border: 1px solid #2a2a4a; border-radius: 12px; padding: 20px; }
+    .panel h2 { font-size: 16px; margin-bottom: 16px; color: #fff; }
+    .row { display: grid; grid-template-columns: 1fr auto; gap: 16px; align-items: center; padding: 14px 0; border-top: 1px solid #2a2a4a; }
+    .row:first-of-type { border-top: 0; }
+    .meta { color: #888; font-size: 13px; margin-top: 4px; }
+    .actions { display: flex; gap: 8px; flex-wrap: wrap; justify-content: flex-end; }
+    .message { display: none; padding: 10px 12px; border-radius: 8px; font-size: 13px; }
+    .message.show { display: block; background: #1a3a2a; border: 1px solid #2d6a4a; color: #7ee0a3; }
+    @media (max-width: 760px) { .row { grid-template-columns: 1fr; } .actions { justify-content: flex-start; } }
+  </style>
+</head>
+<body>
+  <div class="topbar">
+    <h1>Admin Panel</h1>
+    <div class="nav">
+      <button class="btn" onclick="location.href='/games.html'">Oyunlar</button>
+      <button class="btn danger" onclick="logout()">Cikis</button>
+    </div>
+  </div>
+
+  <main class="main">
+    <div class="message" id="message"></div>
+
+    <section class="panel">
+      <h2>Toplu Skor Sifirlama</h2>
+      <div class="actions" style="justify-content:flex-start;">
+        <select id="bulk-game">
+          <option value="cat-clicker">Dans Eden KEDY</option>
+          <option value="flappy-cat">Ucan KEDY</option>
+        </select>
+        <button class="btn warn" onclick="resetGameForAll()">Secili Oyunda Herkesi Sifirla</button>
+      </div>
+    </section>
+
+    <section class="panel">
+      <h2>Kullanicilar</h2>
+      <div id="users-list">Yukleniyor...</div>
+    </section>
+  </main>
+
+  <script>
+    const games = [
+      { id: 'cat-clicker', name: 'Dans Eden KEDY' },
+      { id: 'flappy-cat', name: 'Ucan KEDY' },
+    ];
+
+    async function init() {
+      const me = await fetch('/api/auth/me');
+      if (!me.ok) { location.href = '/'; return; }
+      const { user } = await me.json();
+      if (user.role !== 'admin') { location.href = '/games.html'; return; }
+      await loadUsers();
+    }
+
+    async function loadUsers() {
+      const res = await fetch('/api/admin/users');
+      if (!res.ok) { show('Kullanicilar yuklenemedi.'); return; }
+      const { users } = await res.json();
+      document.getElementById('users-list').innerHTML = users.map(user => `
+        <div class="row">
+          <div>
+            <strong>${user.firstName} ${user.lastName} @${user.username}</strong>
+            <div class="meta">${user.email} - ${user.banned ? 'Yasakli' : 'Aktif'}</div>
+          </div>
+          <div class="actions">
+            <select id="game-${user.id}">
+              ${games.map(game => `<option value="${game.id}">${game.name}</option>`).join('')}
+            </select>
+            <button class="btn warn" onclick="resetUserGame(${user.id})">Bu Oyunu Sifirla</button>
+            <button class="btn" onclick="setBan(${user.id}, ${!user.banned})">${user.banned ? 'Yasagi Kaldir' : 'Yasakla'}</button>
+            <button class="btn danger" onclick="deleteUser(${user.id})">Sil</button>
+          </div>
+        </div>
+      `).join('') || 'Kullanici yok.';
+    }
+
+    async function requestJson(url, options) {
+      const res = await fetch(url, options);
+      const data = await res.json().catch(() => ({}));
+      show(data.message || (res.ok ? 'Islem tamamlandi.' : 'Islem basarisiz.'));
+      if (res.ok) await loadUsers();
+    }
+
+    function resetUserGame(userId) {
+      const gameId = document.getElementById('game-' + userId).value;
+      requestJson('/api/admin/users/' + userId + '/reset-game', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ gameId }),
+      });
+    }
+
+    function resetGameForAll() {
+      const gameId = document.getElementById('bulk-game').value;
+      requestJson('/api/admin/games/reset', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ gameId }),
+      });
+    }
+
+    function setBan(userId, banned) {
+      requestJson('/api/admin/users/' + userId + '/ban', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ banned }),
+      });
+    }
+
+    function deleteUser(userId) {
+      if (!confirm('Bu kullanici ve skorlari silinsin mi?')) return;
+      requestJson('/api/admin/users/' + userId, { method: 'DELETE' });
+    }
+
+    function show(text) {
+      const el = document.getElementById('message');
+      el.textContent = text;
+      el.className = 'message show';
+    }
+
+    async function logout() {
+      await fetch('/api/auth/logout', { method: 'POST' });
+      location.replace('/');
+    }
+
+    init();
+  </script>
+</body>
+</html>

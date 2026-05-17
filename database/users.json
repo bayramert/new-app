@@ -21,6 +21,30 @@
       "role": "user",
       "total_score": 0,
       "created_at": "2026-05-17T09:13:27.802Z"
+    },
+    {
+      "id": 1779030855254,
+      "firstName": "iso",
+      "lastName": "17",
+      "username": "iso17",
+      "email": "iso17@gmail.com",
+      "password": "$2a$10$KM4Wb8VzHvv7RzMtxHBszuF6o5d6s8n1SgY8UCinVAQohqbx4760G",
+      "role": "user",
+      "banned": false,
+      "total_score": 0,
+      "created_at": "2026-05-17T15:14:15.254Z"
+    },
+    {
+      "id": 1779030892954,
+      "firstName": "iso",
+      "lastName": "1734",
+      "username": "iso1734",
+      "email": "iso1734@gmail.com",
+      "password": "$2a$10$vXIVNAiJPft10PGG/Dv.3unHwjSqZv7ngedthCWelJ9XcihFTsSL.",
+      "role": "user",
+      "banned": false,
+      "total_score": 0,
+      "created_at": "2026-05-17T15:14:52.954Z"
     }
   ]
 }
