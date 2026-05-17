@@ -3,18 +3,20 @@
     {
       "userId": 1779009207802,
       "gameId": "cat-clicker",
-      "savedAt": "2026-05-17T10:37:47.999Z",
+      "savedAt": "2026-05-17T15:57:45.407Z",
+      "resetAt": "2026-05-17T15:57:45.407Z",
+      "resetByAdmin": true,
       "data": {
         "state": {
-          "currency": 361,
-          "totalEarned": 562,
-          "totalClicks": 122,
-          "perClick": 3
+          "currency": 0,
+          "totalEarned": 0,
+          "totalClicks": 0,
+          "perClick": 1
         },
         "upgrades": [
           {
             "id": "u1",
-            "purchased": true
+            "purchased": false
           },
           {
             "id": "u2",
@@ -36,11 +38,11 @@
         "autoClickers": [
           {
             "id": "a1",
-            "count": 3
+            "count": 0
           },
           {
             "id": "a2",
-            "count": 1
+            "count": 0
           },
           {
             "id": "a3",
@@ -60,56 +62,58 @@
     {
       "userId": 1778942059108,
       "gameId": "cat-clicker",
-      "savedAt": "2026-05-17T14:38:20.408Z",
+      "savedAt": "2026-05-17T15:57:45.407Z",
+      "resetAt": "2026-05-17T15:57:45.407Z",
+      "resetByAdmin": true,
       "data": {
         "state": {
-          "currency": 4509,
-          "totalEarned": 51694,
-          "totalClicks": 891,
-          "perClick": 86
+          "currency": 0,
+          "totalEarned": 0,
+          "totalClicks": 0,
+          "perClick": 1
         },
         "upgrades": [
           {
             "id": "u1",
-            "purchased": true
+            "purchased": false
           },
           {
             "id": "u2",
-            "purchased": true
+            "purchased": false
           },
           {
             "id": "u3",
-            "purchased": true
+            "purchased": false
           },
           {
             "id": "u4",
-            "purchased": true
+            "purchased": false
           },
           {
             "id": "u5",
-            "purchased": true
+            "purchased": false
           }
         ],
         "autoClickers": [
           {
             "id": "a1",
-            "count": 18
+            "count": 0
           },
           {
             "id": "a2",
-            "count": 1
+            "count": 0
           },
           {
             "id": "a3",
-            "count": 2
+            "count": 0
           },
           {
             "id": "a4",
-            "count": 7
+            "count": 0
           },
           {
             "id": "a5",
-            "count": 1
+            "count": 0
           }
         ]
       }
@@ -125,7 +129,7 @@
     {
       "userId": 1778942059108,
       "gameId": "flappy-cat",
-      "savedAt": "2026-05-17T14:38:34.816Z",
+      "savedAt": "2026-05-17T15:57:23.169Z",
       "data": {
         "bestScore": 13
       }
@@ -133,17 +137,35 @@
     {
       "userId": 1778942059108,
       "gameId": "rps-cat",
-      "savedAt": "2026-05-17T15:04:18.740Z",
+      "savedAt": "2026-05-17T15:57:07.064Z",
       "data": {
-        "wins": 18,
-        "losses": 26,
-        "draws": 20,
-        "rounds": 64,
+        "wins": 19,
+        "losses": 27,
+        "draws": 21,
+        "rounds": 67,
         "currentStreak": 0,
         "bestStreak": 4,
-        "playerScore": 18,
-        "catScore": 26,
+        "playerScore": 19,
+        "catScore": 27,
         "history": [
+          {
+            "playerChoice": "scissors",
+            "catChoice": "scissors",
+            "result": "draw",
+            "playedAt": "2026-05-17T15:57:05.995Z"
+          },
+          {
+            "playerChoice": "paper",
+            "catChoice": "scissors",
+            "result": "lose",
+            "playedAt": "2026-05-17T15:57:05.221Z"
+          },
+          {
+            "playerChoice": "rock",
+            "catChoice": "scissors",
+            "result": "win",
+            "playedAt": "2026-05-17T15:57:04.258Z"
+          },
           {
             "playerChoice": "scissors",
             "catChoice": "rock",
@@ -173,24 +195,6 @@
             "catChoice": "scissors",
             "result": "draw",
             "playedAt": "2026-05-17T15:03:43.071Z"
-          },
-          {
-            "playerChoice": "rock",
-            "catChoice": "scissors",
-            "result": "win",
-            "playedAt": "2026-05-17T15:03:42.338Z"
-          },
-          {
-            "playerChoice": "paper",
-            "catChoice": "scissors",
-            "result": "lose",
-            "playedAt": "2026-05-17T15:03:41.854Z"
-          },
-          {
-            "playerChoice": "scissors",
-            "catChoice": "rock",
-            "result": "lose",
-            "playedAt": "2026-05-17T15:03:41.185Z"
           }
         ]
       }
@@ -263,13 +267,63 @@
     {
       "userId": 1779030290368,
       "gameId": "cat-clicker",
-      "savedAt": "2026-05-17T15:29:01.112Z",
+      "savedAt": "2026-05-17T15:57:45.407Z",
+      "resetAt": "2026-05-17T15:57:45.407Z",
+      "resetByAdmin": true,
       "data": {
         "state": {
-          "currency": 29158,
-          "totalEarned": 134848,
-          "totalClicks": 1178,
-          "perClick": 86
+          "currency": 0,
+          "totalEarned": 0,
+          "totalClicks": 0,
+          "perClick": 1
+        },
+        "upgrades": [
+          {
+            "id": "u1",
+            "purchased": false
+          },
+          {
+            "id": "u2",
+            "purchased": false
+          },
+          {
+            "id": "u3",
+            "purchased": false
+          },
+          {
+            "id": "u4",
+            "purchased": false
+          },
+          {
+            "id": "u5",
+            "purchased": false
+          }
+        ],
+        "autoClickers": [
+          {
+            "id": "a1",
+            "count": 0
+          },
+          {
+            "id": "a2",
+            "count": 0
+          },
+          {
+            "id": "a3",
+            "count": 0
+          },
+          {
+            "id": "a4",
+            "count": 0
+          },
+          {
+            "id": "a5",
+            "count": 0
+          }
+        ]
+      }
+    },
+    {
       "userId": 1779030892954,
       "gameId": "flappy-cat",
       "savedAt": "2026-05-17T15:15:22.609Z",
@@ -280,8 +334,8 @@
     {
       "userId": 1779030892954,
       "gameId": "cat-clicker",
-      "savedAt": "2026-05-17T15:16:37.224Z",
-      "resetAt": "2026-05-17T15:16:37.224Z",
+      "savedAt": "2026-05-17T15:57:45.407Z",
+      "resetAt": "2026-05-17T15:57:45.407Z",
       "resetByAdmin": true,
       "data": {
         "state": {
@@ -339,8 +393,8 @@
     {
       "userId": 1779030855254,
       "gameId": "cat-clicker",
-      "savedAt": "2026-05-17T15:16:09.602Z",
-      "resetAt": "2026-05-17T15:16:09.602Z",
+      "savedAt": "2026-05-17T15:57:45.407Z",
+      "resetAt": "2026-05-17T15:57:45.407Z",
       "resetByAdmin": true,
       "data": {
         "state": {
@@ -352,23 +406,6 @@
         "upgrades": [
           {
             "id": "u1",
-            "purchased": true
-          },
-          {
-            "id": "u2",
-            "purchased": true
-          },
-          {
-            "id": "u3",
-            "purchased": true
-          },
-          {
-            "id": "u4",
-            "purchased": true
-          },
-          {
-            "id": "u5",
-            "purchased": true
             "purchased": false
           },
           {
@@ -391,23 +428,6 @@
         "autoClickers": [
           {
             "id": "a1",
-            "count": 34
-          },
-          {
-            "id": "a2",
-            "count": 14
-          },
-          {
-            "id": "a3",
-            "count": 7
-          },
-          {
-            "id": "a4",
-            "count": 1
-          },
-          {
-            "id": "a5",
-            "count": 4
             "count": 0
           },
           {
@@ -425,6 +445,88 @@
           {
             "id": "a5",
             "count": 0
+          }
+        ]
+      }
+    },
+    {
+      "userId": 1779033497854,
+      "gameId": "cat-clicker",
+      "savedAt": "2026-05-17T15:58:57.764Z",
+      "resetAt": "2026-05-17T15:58:57.764Z",
+      "resetByAdmin": true,
+      "data": {
+        "state": {
+          "currency": 0,
+          "totalEarned": 0,
+          "totalClicks": 0,
+          "perClick": 1
+        },
+        "upgrades": [
+          {
+            "id": "u1",
+            "purchased": false
+          },
+          {
+            "id": "u2",
+            "purchased": false
+          },
+          {
+            "id": "u3",
+            "purchased": false
+          },
+          {
+            "id": "u4",
+            "purchased": false
+          },
+          {
+            "id": "u5",
+            "purchased": false
+          }
+        ],
+        "autoClickers": [
+          {
+            "id": "a1",
+            "count": 0
+          },
+          {
+            "id": "a2",
+            "count": 0
+          },
+          {
+            "id": "a3",
+            "count": 0
+          },
+          {
+            "id": "a4",
+            "count": 0
+          },
+          {
+            "id": "a5",
+            "count": 0
+          }
+        ]
+      }
+    },
+    {
+      "userId": 1779033497854,
+      "gameId": "rps-cat",
+      "savedAt": "2026-05-17T15:58:40.372Z",
+      "data": {
+        "wins": 1,
+        "losses": 0,
+        "draws": 0,
+        "rounds": 1,
+        "currentStreak": 1,
+        "bestStreak": 1,
+        "playerScore": 1,
+        "catScore": 0,
+        "history": [
+          {
+            "playerChoice": "rock",
+            "catChoice": "scissors",
+            "result": "win",
+            "playedAt": "2026-05-17T15:58:38.794Z"
           }
         ]
       }
