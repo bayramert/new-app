@@ -60,11 +60,11 @@
     {
       "userId": 1778942059108,
       "gameId": "cat-clicker",
-      "savedAt": "2026-05-17T13:06:14.104Z",
+      "savedAt": "2026-05-17T13:51:22.718Z",
       "data": {
         "state": {
-          "currency": 46,
-          "totalEarned": 78,
+          "currency": 47,
+          "totalEarned": 79,
           "totalClicks": 70,
           "perClick": 1
         },
