@@ -3,12 +3,12 @@
     {
       "userId": 1779009207802,
       "gameId": "cat-clicker",
-      "savedAt": "2026-05-17T10:27:04.224Z",
+      "savedAt": "2026-05-17T10:37:47.999Z",
       "data": {
         "state": {
-          "currency": 84,
-          "totalEarned": 185,
-          "totalClicks": 93,
+          "currency": 361,
+          "totalEarned": 562,
+          "totalClicks": 122,
           "perClick": 3
         },
         "upgrades": [
@@ -40,7 +40,7 @@
           },
           {
             "id": "a2",
-            "count": 0
+            "count": 1
           },
           {
             "id": "a3",
@@ -112,6 +112,14 @@
             "count": 0
           }
         ]
+      }
+    },
+    {
+      "userId": 1779009207802,
+      "gameId": "flappy-cat",
+      "savedAt": "2026-05-17T11:04:26.091Z",
+      "data": {
+        "bestScore": 27
       }
     }
   ]
