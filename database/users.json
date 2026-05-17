@@ -23,6 +23,15 @@
       "created_at": "2026-05-17T09:13:27.802Z"
     },
     {
+      "id": 1779030290368,
+      "firstName": "Arda",
+      "lastName": "Güneş",
+      "username": "smardas",
+      "email": "ardagunes1881@gmail.com",
+      "password": "$2a$10$j987ssFBKBtwZ9F5ToahVe3MBoS9Z1odlS46oFBj6uI6Z/.2coACO",
+      "role": "user",
+      "total_score": 0,
+      "created_at": "2026-05-17T15:04:50.368Z"
       "id": 1779030855254,
       "firstName": "iso",
       "lastName": "17",

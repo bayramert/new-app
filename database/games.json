@@ -47,6 +47,14 @@
       "image": "https://placehold.co/300x180/9966ff/fff?text=Color+Rush",
       "description": "Renklere göre hızlı tepki ver!",
       "playUrl": "#"
+    },
+    {
+      "id": 7,
+      "name": "Tas Kagit Makas KEDY",
+      "type": "Sans",
+      "image": "/images/Kedyy.jpg",
+      "description": "Secimini yap, kedi patisi yandan gelsin ve kazanan belli olsun!",
+      "playUrl": "/rock_paper_scissors_cat.html"
     }
   ]
 }

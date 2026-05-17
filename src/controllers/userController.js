@@ -8,6 +8,7 @@ const SCORES_PATH = path.join(__dirname, '../../database/scores.json');
 // gameId slug -> { görünen ad, skor etiketi, veri okuyucu }
 const GAME_META = {
   'cat-clicker': { name: 'Dans Eden KEDY', label: 'Para',        getScore: d => d?.state?.totalEarned ?? 0 },
+  'rps-cat':      { name: 'Tas Kagit Makas KEDY', label: 'Puan',  getScore: d => ((d?.wins ?? 0) * 3) + (d?.draws ?? 0) },
   'flappy-cat':  { name: 'Ucan KEDY',      label: 'En İyi Skor', getScore: d => d?.bestScore ?? 0 },
 };
 

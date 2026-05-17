@@ -32,6 +32,13 @@
       text-decoration: none;
     }
     .profile-btn:hover { border-color: #6c63ff; color: #6c63ff; }
+    .leaderboard-btn {
+      padding: 7px 16px; background: transparent;
+      border: 1px solid #2a2a4a; border-radius: 8px;
+      color: #aaa; font-size: 13px; cursor: pointer; transition: all 0.2s;
+      text-decoration: none;
+    }
+    .leaderboard-btn:hover { border-color: #ffb347; color: #ffb347; }
     .logout-btn {
       padding: 7px 16px; background: transparent;
       border: 1px solid #444; border-radius: 8px;
@@ -172,6 +179,7 @@
       <span class="user-fullname" id="user-fullname">...</span>
       <span class="user-meta" id="user-meta">...</span>
     </div>
+    <a class="leaderboard-btn" href="/leaderboard.html">Liderlik</a>
     <a class="profile-btn" href="/profile.html">👤 Profil</a>
     <a class="profile-btn admin-btn" id="admin-link" href="/admin.html">Admin</a>
     <button class="logout-btn" onclick="handleLogout()">Çıkış Yap</button>

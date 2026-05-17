@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tas Kagit Makas KEDY</title>
+  <style>
+    :root {
+      --bg: #20131a;
+      --surface: #2d1c25;
+      --surface2: #3a2530;
+      --line: rgba(255,255,255,0.1);
+      --text: #fff4f4;
+      --muted: #c9959c;
+      --accent: #f7a8a8;
+      --accent2: #ffd36e;
+      --win: #72d48b;
+      --lose: #ee6b7a;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      min-height: 100vh;
+      font-family: 'Segoe UI', sans-serif;
+      background:
+        radial-gradient(circle at 50% 12%, rgba(247,168,168,0.16), transparent 34%),
+        var(--bg);
+      color: var(--text);
+      overflow-x: hidden;
+    }
+
+    .topbar {
+      background: rgba(45,28,37,0.94);
+      border-bottom: 1px solid var(--line);
+      padding: 13px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      position: sticky;
+      top: 0;
+      z-index: 20;
+    }
+    .title { font-size: 20px; font-weight: 800; color: var(--accent); }
+    .back-btn {
+      padding: 8px 16px;
+      background: transparent;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      color: var(--muted);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .back-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+    .game {
+      width: min(1080px, 100%);
+      margin: 28px auto;
+      padding: 0 20px 36px;
+      display: grid;
+      grid-template-columns: 250px 1fr 250px;
+      gap: 18px;
+      align-items: start;
+    }
+
+    .panel {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 18px;
+    }
+    .panel h2 {
+      font-size: 15px;
+      color: var(--accent2);
+      margin-bottom: 14px;
+    }
+    .stat {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 9px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      font-size: 13px;
+    }
+    .stat:last-child { border-bottom: none; }
+    .stat span:first-child { color: var(--muted); }
+    .stat span:last-child { font-weight: 800; color: var(--text); }
+
+    .arena {
+      min-height: 620px;
+      background: linear-gradient(180deg, #4c2d38 0%, #251720 100%);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 28px;
+    }
+
+    .scoreline {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      align-items: center;
+      gap: 14px;
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 700;
+    }
+    .scoreline strong {
+      display: block;
+      color: var(--text);
+      font-size: 28px;
+      margin-top: 3px;
+    }
+    .scoreline .center { color: var(--accent2); font-size: 18px; }
+    .right { text-align: right; }
+
+    .hands {
+      flex: 1;
+      position: relative;
+      min-height: 320px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .hand-wrap {
+      position: absolute;
+      width: 180px;
+      height: 230px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      opacity: 0.8;
+      transform: translateX(0);
+      transition: opacity 0.2s;
+    }
+    .player-hand { left: 8%; }
+    .cat-hand { right: 8%; }
+    .hand-wrap.enter-left { animation: enterLeft 0.42s ease-out both; }
+    .hand-wrap.enter-right { animation: enterRight 0.42s ease-out both; }
+
+    .choice-img {
+      width: 170px;
+      height: 185px;
+      object-fit: contain;
+      display: block;
+      border-radius: 18px;
+      filter: drop-shadow(0 10px 0 rgba(0,0,0,0.2));
+    }
+
+    @keyframes enterLeft {
+      from { transform: translateX(-260px) rotate(-10deg); opacity: 0; }
+      to { transform: translateX(0) rotate(0); opacity: 1; }
+    }
+    @keyframes enterRight {
+      from { transform: translateX(260px) rotate(10deg); opacity: 0; }
+      to { transform: translateX(0) rotate(0); opacity: 1; }
+    }
+
+    .paw {
+      position: relative;
+      width: 150px;
+      height: 180px;
+      background: #fffafa;
+      border: 5px solid #1b1117;
+      border-radius: 72px 72px 42px 42px;
+      box-shadow: 0 10px 0 rgba(0,0,0,0.2);
+    }
+    .cat-hand .paw { background: #fff; }
+    .choice-rock .paw { border-radius: 78px 78px 56px 56px; }
+    .choice-paper .paw { height: 205px; border-radius: 64px 64px 38px 38px; }
+    .choice-scissors .paw { width: 160px; clip-path: polygon(0 32%, 24% 0, 48% 34%, 72% 0, 100% 32%, 82% 100%, 18% 100%); }
+
+    .toe {
+      position: absolute;
+      width: 25px;
+      height: 30px;
+      background: #ffb2c6;
+      border: 4px solid #1b1117;
+      border-radius: 50%;
+      top: 34px;
+    }
+    .toe.t1 { left: 26px; }
+    .toe.t2 { left: 62px; top: 22px; }
+    .toe.t3 { right: 26px; }
+    .pad {
+      position: absolute;
+      width: 58px;
+      height: 46px;
+      left: 50%;
+      top: 88px;
+      transform: translateX(-50%);
+      background: #ff9fbc;
+      border: 4px solid #1b1117;
+      border-radius: 46% 46% 54% 54%;
+    }
+    .stripe {
+      position: absolute;
+      right: 15px;
+      width: 48px;
+      height: 9px;
+      background: #1b1117;
+      border-radius: 20px;
+    }
+    .stripe.s1 { bottom: 48px; }
+    .stripe.s2 { bottom: 28px; width: 58px; }
+    .choice-rock .toe, .choice-rock .pad { display: none; }
+    .choice-rock .paw::after {
+      content: "";
+      position: absolute;
+      left: 26px;
+      top: 62px;
+      width: 90px;
+      height: 52px;
+      border-bottom: 5px solid #1b1117;
+      border-radius: 0 0 48px 48px;
+    }
+
+    .hand-label {
+      color: var(--text);
+      font-size: 13px;
+      font-weight: 800;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    .result {
+      text-align: center;
+      min-height: 92px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 8px;
+    }
+    .result-title {
+      font-size: 32px;
+      font-weight: 900;
+      color: var(--accent2);
+    }
+    .result-title.win { color: var(--win); }
+    .result-title.lose { color: var(--lose); }
+    .result-sub { color: var(--muted); font-size: 14px; }
+
+    .choices {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+    }
+    .choice-btn {
+      min-height: 74px;
+      background: #fff4f4;
+      border: 4px solid #1b1117;
+      border-radius: 12px;
+      color: #1b1117;
+      font-weight: 900;
+      cursor: pointer;
+      transition: transform 0.15s, box-shadow 0.15s;
+    }
+    .choice-btn:hover { transform: translateY(-3px); box-shadow: 0 8px 0 rgba(0,0,0,0.22); }
+    .choice-btn:disabled { opacity: 0.55; cursor: wait; transform: none; }
+    .choice-symbol { display: block; font-size: 18px; margin-bottom: 4px; }
+
+    .history {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      max-height: 300px;
+      overflow: auto;
+    }
+    .history-item {
+      background: var(--surface2);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 10px;
+      padding: 10px;
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.4;
+    }
+    .history-item strong { color: var(--text); }
+
+    @media (max-width: 920px) {
+      .game { grid-template-columns: 1fr; }
+      .arena { min-height: 590px; }
+      .player-hand { left: 2%; }
+      .cat-hand { right: 2%; }
+    }
+    @media (max-width: 620px) {
+      .arena { padding: 18px; min-height: 560px; }
+      .hand-wrap { width: 132px; height: 190px; }
+      .paw { width: 112px; height: 144px; border-width: 4px; }
+      .choice-paper .paw { height: 164px; }
+      .choice-scissors .paw { width: 124px; }
+      .toe { width: 20px; height: 24px; border-width: 3px; }
+      .toe.t1 { left: 18px; }
+      .toe.t2 { left: 45px; }
+      .toe.t3 { right: 18px; }
+      .pad { width: 46px; height: 36px; top: 72px; border-width: 3px; }
+      .choices { grid-template-columns: 1fr; }
+      .result-title { font-size: 26px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="topbar">
+    <div class="title">Tas Kagit Makas KEDY</div>
+    <button class="back-btn" onclick="game.save().then(() => window.location.href='/games.html')">Geri Don</button>
+  </div>
+
+  <main class="game">
+    <aside class="panel">
+      <h2>Skor</h2>
+      <div class="stat"><span>Galibiyet</span><span id="wins">0</span></div>
+      <div class="stat"><span>Maglubiyet</span><span id="losses">0</span></div>
+      <div class="stat"><span>Beraberlik</span><span id="draws">0</span></div>
+      <div class="stat"><span>Tur</span><span id="rounds">0</span></div>
+      <div class="stat"><span>Seri Rekoru</span><span id="best-streak">0</span></div>
+      <div class="stat"><span>Toplam Puan</span><span id="points">0</span></div>
+    </aside>
+
+    <section class="arena">
+      <div class="scoreline">
+        <div>Sen<strong id="player-score">0</strong></div>
+        <div class="center">VS</div>
+        <div class="right">KEDY<strong id="cat-score">0</strong></div>
+      </div>
+
+      <div class="hands">
+        <div class="hand-wrap player-hand" id="player-hand">
+          <img class="choice-img" id="player-choice-img" src="/images/taselkedy1.jpeg" alt="Senin secimin">
+          <div class="hand-label" id="player-label">Tas</div>
+        </div>
+
+        <div class="hand-wrap cat-hand" id="cat-hand">
+          <img class="choice-img" id="cat-choice-img" src="/images/taselkedy2.png" alt="KEDY secimi">
+          <div class="hand-label" id="cat-label">KEDY</div>
+        </div>
+      </div>
+
+      <div class="result">
+        <div class="result-title" id="result-title">Secimini yap</div>
+        <div class="result-sub" id="result-sub">Kedi de ayni anda random secim yapacak.</div>
+      </div>
+
+      <div class="choices">
+        <button class="choice-btn" onclick="game.play('rock')">
+          <span class="choice-symbol">TAS</span>Yumruk Pati
+        </button>
+        <button class="choice-btn" onclick="game.play('paper')">
+          <span class="choice-symbol">KAGIT</span>Acik Pati
+        </button>
+        <button class="choice-btn" onclick="game.play('scissors')">
+          <span class="choice-symbol">MAKAS</span>Iki Pati
+        </button>
+      </div>
+    </section>
+
+    <aside class="panel">
+      <h2>Son Turlar</h2>
+      <div class="history" id="history">
+        <div class="history-item">Henuz tur oynanmadi.</div>
+      </div>
+    </aside>
+  </main>
+
+  <audio id="cat-happy-sound" src="/sounds/kedi%20ses%20mutlu.wav" preload="auto"></audio>
+  <audio id="cat-sad-sound" src="/sounds/kedi%20sesi%20mutsuz.wav" preload="auto"></audio>
+
+  <script>
+    class RockPaperScissorsCatGame {
+      constructor() {
+        this.gameId = 'rps-cat';
+        this.choices = ['rock', 'paper', 'scissors'];
+        this.labels = {
+          rock: 'Tas',
+          paper: 'Kagit',
+          scissors: 'Makas',
+        };
+        this.playerImages = {
+          rock: '/images/taselkedy1.jpeg',
+          paper: '/images/kagitelkedy1.jpeg',
+          scissors: '/images/makaselkedy1.jpeg',
+        };
+        this.catImages = {
+          rock: '/images/taselkedy2.png',
+          paper: '/images/kagitelkedy2.png',
+          scissors: '/images/makaselkedy2.png',
+        };
+        this.state = {
+          wins: 0,
+          losses: 0,
+          draws: 0,
+          rounds: 0,
+          currentStreak: 0,
+          bestStreak: 0,
+          playerScore: 0,
+          catScore: 0,
+          history: [],
+        };
+      }
+
+      async init() {
+        await this.load();
+        this.render();
+        this.setHand('player', 'rock');
+        this.setHand('cat', 'rock');
+      }
+
+      randomChoice() {
+        return this.choices[Math.floor(Math.random() * this.choices.length)];
+      }
+
+      play(playerChoice) {
+        this.setButtons(false);
+        const catChoice = this.randomChoice();
+        const result = this.getResult(playerChoice, catChoice);
+
+        this.setHand('player', playerChoice, 'enter-left');
+        this.setHand('cat', catChoice, 'enter-right');
+        this.applyResult(result);
+        this.pushHistory(playerChoice, catChoice, result);
+        this.renderResult(result, playerChoice, catChoice);
+        this.playResultSound(result);
+        this.render();
+        this.save();
+
+        setTimeout(() => this.setButtons(true), 460);
+      }
+
+      getResult(playerChoice, catChoice) {
+        if (playerChoice === catChoice) return 'draw';
+        const wins =
+          (playerChoice === 'rock' && catChoice === 'scissors') ||
+          (playerChoice === 'paper' && catChoice === 'rock') ||
+          (playerChoice === 'scissors' && catChoice === 'paper');
+        return wins ? 'win' : 'lose';
+      }
+
+      applyResult(result) {
+        this.state.rounds += 1;
+
+        if (result === 'win') {
+          this.state.wins += 1;
+          this.state.playerScore += 1;
+          this.state.currentStreak += 1;
+          this.state.bestStreak = Math.max(this.state.bestStreak, this.state.currentStreak);
+          return;
+        }
+
+        if (result === 'lose') {
+          this.state.losses += 1;
+          this.state.catScore += 1;
+          this.state.currentStreak = 0;
+          return;
+        }
+
+        this.state.draws += 1;
+      }
+
+      pushHistory(playerChoice, catChoice, result) {
+        this.state.history.unshift({
+          playerChoice,
+          catChoice,
+          result,
+          playedAt: new Date().toISOString(),
+        });
+        this.state.history = this.state.history.slice(0, 8);
+      }
+
+      setHand(side, choice, animationClass) {
+        const hand = document.getElementById(`${side}-hand`);
+        const label = document.getElementById(`${side}-label`);
+        hand.className = `hand-wrap ${side === 'player' ? 'player-hand' : 'cat-hand'}`;
+        if (side === 'player') {
+          const img = document.getElementById('player-choice-img');
+          img.src = this.playerImages[choice];
+          img.alt = 'Sen: ' + this.labels[choice];
+        } else {
+          const img = document.getElementById('cat-choice-img');
+          img.src = this.catImages[choice];
+          img.alt = 'KEDY: ' + this.labels[choice];
+        }
+        if (animationClass) {
+          void hand.offsetWidth;
+          hand.classList.add(animationClass);
+        }
+        label.textContent = side === 'cat' ? 'KEDY: ' + this.labels[choice] : 'SEN: ' + this.labels[choice];
+      }
+
+      renderResult(result, playerChoice, catChoice) {
+        const title = document.getElementById('result-title');
+        const sub = document.getElementById('result-sub');
+        title.className = 'result-title';
+
+        if (result === 'win') {
+          title.textContent = 'Kazandin!';
+          title.classList.add('win');
+        } else if (result === 'lose') {
+          title.textContent = 'KEDY kazandi!';
+          title.classList.add('lose');
+        } else {
+          title.textContent = 'Berabere!';
+        }
+
+        sub.textContent = `Sen ${this.labels[playerChoice]}, KEDY ${this.labels[catChoice]} yapti.`;
+      }
+
+      playResultSound(result) {
+        const soundId = result === 'win'
+          ? 'cat-sad-sound'
+          : result === 'lose'
+            ? 'cat-happy-sound'
+            : null;
+
+        if (!soundId) return;
+        const sound = document.getElementById(soundId);
+        if (!sound) return;
+        sound.currentTime = 0;
+        sound.play().catch(() => {});
+      }
+
+      render() {
+        const points = this.state.wins * 3 + this.state.draws;
+        document.getElementById('wins').textContent = this.state.wins;
+        document.getElementById('losses').textContent = this.state.losses;
+        document.getElementById('draws').textContent = this.state.draws;
+        document.getElementById('rounds').textContent = this.state.rounds;
+        document.getElementById('best-streak').textContent = this.state.bestStreak;
+        document.getElementById('points').textContent = points;
+        document.getElementById('player-score').textContent = this.state.playerScore;
+        document.getElementById('cat-score').textContent = this.state.catScore;
+        this.renderHistory();
+      }
+
+      renderHistory() {
+        const history = document.getElementById('history');
+        if (!this.state.history.length) {
+          history.innerHTML = '<div class="history-item">Henuz tur oynanmadi.</div>';
+          return;
+        }
+
+        history.innerHTML = this.state.history.map(item => {
+          const text = item.result === 'win' ? 'Kazandin' : item.result === 'lose' ? 'Kaybettin' : 'Berabere';
+          return `
+            <div class="history-item">
+              <strong>${text}</strong><br>
+              Sen: ${this.labels[item.playerChoice]} - KEDY: ${this.labels[item.catChoice]}
+            </div>`;
+        }).join('');
+      }
+
+      setButtons(enabled) {
+        document.querySelectorAll('.choice-btn').forEach(btn => {
+          btn.disabled = !enabled;
+        });
+      }
+
+      buildSaveData() {
+        return {
+          wins: this.state.wins,
+          losses: this.state.losses,
+          draws: this.state.draws,
+          rounds: this.state.rounds,
+          currentStreak: this.state.currentStreak,
+          bestStreak: this.state.bestStreak,
+          playerScore: this.state.playerScore,
+          catScore: this.state.catScore,
+          history: this.state.history,
+        };
+      }
+
+      async save() {
+        try {
+          await fetch(`/api/games/save/${this.gameId}`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ data: this.buildSaveData() }),
+          });
+        } catch {}
+      }
+
+      async load() {
+        try {
+          const res = await fetch(`/api/games/save/${this.gameId}`);
+          if (!res.ok) {
+            if (res.status === 401) window.location.href = '/';
+            return;
+          }
+          const { save } = await res.json();
+          if (save) Object.assign(this.state, save);
+        } catch {}
+      }
+    }
+
+    const game = new RockPaperScissorsCatGame();
+    window.addEventListener('beforeunload', () => game.save());
+    game.init();
+  </script>
+</body>
+</html>

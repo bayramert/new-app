@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Leaderboard</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Segoe UI', sans-serif; background: #0f0f1a; color: #e0e0e0; min-height: 100vh; }
+
+    .topbar {
+      background: #1a1a2e;
+      border-bottom: 1px solid #2a2a4a;
+      padding: 14px 28px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+    .topbar-left { display: flex; align-items: center; gap: 16px; }
+    .topbar h1 { font-size: 18px; color: #fff; }
+    .nav-btn {
+      padding: 7px 14px;
+      background: transparent;
+      border: 1px solid #2a2a4a;
+      border-radius: 8px;
+      color: #aaa;
+      font-size: 13px;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+    .nav-btn:hover { border-color: #6c63ff; color: #6c63ff; }
+
+    .main { max-width: 980px; margin: 36px auto; padding: 0 20px; display: flex; flex-direction: column; gap: 20px; }
+    .summary {
+      background: #1a1a2e;
+      border: 1px solid #2a2a4a;
+      border-radius: 16px;
+      padding: 22px 24px;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 18px;
+      align-items: center;
+    }
+    .summary-title { font-size: 22px; font-weight: 700; color: #fff; }
+    .summary-sub { font-size: 13px; color: #888; margin-top: 5px; }
+    .my-rank {
+      min-width: 160px;
+      text-align: right;
+      color: #ffb347;
+      font-weight: 700;
+      font-size: 18px;
+    }
+
+    .board {
+      background: #1a1a2e;
+      border: 1px solid #2a2a4a;
+      border-radius: 16px;
+      overflow: hidden;
+    }
+    .row {
+      display: grid;
+      grid-template-columns: 72px 1fr 160px 170px;
+      gap: 14px;
+      align-items: center;
+      padding: 16px 20px;
+      border-bottom: 1px solid #2a2a4a;
+    }
+    .row:last-child { border-bottom: none; }
+    .row.head {
+      color: #888;
+      font-size: 12px;
+      font-weight: 600;
+      background: #151527;
+    }
+    .row.current {
+      background: rgba(108, 99, 255, 0.16);
+      border-color: rgba(108, 99, 255, 0.45);
+    }
+    .rank { font-size: 20px; font-weight: 800; color: #ffb347; }
+    .player-name { color: #fff; font-weight: 700; }
+    .player-meta { color: #777; font-size: 12px; margin-top: 3px; }
+    .score { color: #6c63ff; font-size: 20px; font-weight: 800; text-align: right; }
+    .games { color: #999; font-size: 12px; text-align: right; line-height: 1.45; }
+    .empty, .loading {
+      text-align: center;
+      color: #666;
+      padding: 42px 18px;
+      font-size: 14px;
+    }
+    .load-more {
+      align-self: center;
+      padding: 10px 22px;
+      background: #6c63ff;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .load-more:hover { background: #574fd6; }
+    .load-more:disabled { background: #3a3a5a; cursor: not-allowed; }
+
+    @media (max-width: 760px) {
+      .summary { grid-template-columns: 1fr; }
+      .my-rank { text-align: left; min-width: 0; }
+      .row { grid-template-columns: 54px 1fr 100px; }
+      .row.head .games, .row .games { display: none; }
+      .score { font-size: 16px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="topbar">
+    <div class="topbar-left">
+      <a class="nav-btn" href="/games.html">Oyunlara Don</a>
+      <h1>Leaderboard</h1>
+    </div>
+    <button class="nav-btn" onclick="handleLogout()">Cikis Yap</button>
+  </div>
+
+  <main class="main">
+    <section class="summary">
+      <div>
+        <div class="summary-title">Oyuncu Siralamasi</div>
+        <div class="summary-sub">Puanlar kayitli oyun skorlarindan otomatik hesaplanir.</div>
+      </div>
+      <div class="my-rank" id="my-rank">Siran yukleniyor...</div>
+    </section>
+
+    <section class="board" id="board">
+      <div class="row head">
+        <div>Sira</div>
+        <div>Oyuncu</div>
+        <div style="text-align:right;">Puan</div>
+        <div class="games">Oyunlar</div>
+      </div>
+      <div class="loading">Leaderboard yukleniyor...</div>
+    </section>
+
+    <button class="load-more" id="load-more" onclick="loadMore()" style="display:none;">Daha Fazla</button>
+  </main>
+
+  <script>
+    let page = 1;
+    let hasMore = false;
+    const limit = 10;
+
+    function escapeHtml(value) {
+      return String(value ?? '').replace(/[&<>"']/g, char => ({
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#039;',
+      }[char]));
+    }
+
+    function fmt(n) {
+      return Number(n || 0).toLocaleString('tr-TR');
+    }
+
+    function formatDate(value) {
+      if (!value) return 'Henuz oyun yok';
+      return new Date(value).toLocaleDateString('tr-TR', {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric',
+      });
+    }
+
+    function renderRows(items, append) {
+      const board = document.getElementById('board');
+      if (!append) {
+        board.innerHTML = `
+          <div class="row head">
+            <div>Sira</div>
+            <div>Oyuncu</div>
+            <div style="text-align:right;">Puan</div>
+            <div class="games">Oyunlar</div>
+          </div>`;
+      }
+
+      if (!items.length && !append) {
+        board.innerHTML += '<div class="empty">Henuz siralama verisi yok.</div>';
+        return;
+      }
+
+      board.innerHTML += items.map(item => {
+        const games = item.games.length
+          ? item.games.map(game => `${escapeHtml(game.gameName)}: ${fmt(game.score)}`).join('<br>')
+          : 'Skor yok';
+
+        return `
+          <div class="row ${item.isCurrentUser ? 'current' : ''}">
+            <div class="rank">#${item.rank}</div>
+            <div>
+              <div class="player-name">${escapeHtml(item.firstName)} ${escapeHtml(item.lastName)}</div>
+              <div class="player-meta">@${escapeHtml(item.username)} &middot; Son kayit: ${formatDate(item.lastPlayedAt)}</div>
+            </div>
+            <div class="score">${fmt(item.totalScore)}</div>
+            <div class="games">${games}</div>
+          </div>`;
+      }).join('');
+    }
+
+    function renderCurrentUser(user) {
+      const el = document.getElementById('my-rank');
+      if (!user) {
+        el.textContent = 'Siran bulunamadi';
+        return;
+      }
+      el.textContent = `Senin siran: #${user.rank} - ${fmt(user.totalScore)} puan`;
+    }
+
+    async function loadLeaderboard(append = false) {
+      const moreBtn = document.getElementById('load-more');
+      moreBtn.disabled = true;
+
+      const res = await fetch(`/api/leaderboard?page=${page}&limit=${limit}`);
+      if (!res.ok) {
+        if (res.status === 401) window.location.href = '/';
+        throw new Error('Leaderboard yuklenemedi.');
+      }
+
+      const data = await res.json();
+      renderRows(data.items, append);
+      renderCurrentUser(data.currentUser);
+
+      hasMore = data.pagination.hasMore;
+      moreBtn.style.display = hasMore ? 'inline-block' : 'none';
+      moreBtn.disabled = false;
+    }
+
+    async function loadMore() {
+      if (!hasMore) return;
+      page += 1;
+      await loadLeaderboard(true);
+    }
+
+    async function handleLogout() {
+      await fetch('/api/auth/logout', { method: 'POST' });
+      window.location.replace('/');
+    }
+
+    loadLeaderboard().catch(() => {
+      document.getElementById('board').innerHTML = '<div class="empty">Leaderboard yuklenemedi.</div>';
+    });
+  </script>
+</body>
+</html>
