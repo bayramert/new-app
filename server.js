@@ -3,7 +3,8 @@ const session = require('express-session');
 const path = require('path');
 
 const authRoutes = require('./src/routes/auth');
-const gameRoutes = require('./src/routes/games'); // YENİ
+const gameRoutes = require('./src/routes/games');
+const userRoutes = require('./src/routes/users');
 
 const app = express();
 const PORT = process.env.PORT || 8080;
@@ -30,7 +31,8 @@ app.use('/games.html', (req, res, next) => {
 
 app.use(express.static(path.join(__dirname, 'public')));
 app.use('/api/auth', authRoutes);
-app.use('/api/games', gameRoutes); // YENİ
+app.use('/api/games', gameRoutes);
+app.use('/api/users', userRoutes);
 
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));

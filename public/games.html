@@ -11,7 +11,7 @@
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body { font-family: 'Segoe UI', sans-serif; background: #0f0f1a; color: #e0e0e0; min-height: 100vh; }
 
-    /* ── TOPBAR ── */
+    /* ── TOPBA ── */
     .topbar {
       background: #1a1a2e;
       border-bottom: 1px solid #2a2a4a;
@@ -25,11 +25,13 @@
     .user-info { display: flex; flex-direction: column; align-items: flex-end; gap: 2px; }
     .user-fullname { font-size: 14px; font-weight: 600; color: #fff; }
     .user-meta { font-size: 12px; color: #888; }
-    .score-badge {
-      background: #2a2a4a; border-radius: 20px;
-      padding: 5px 14px; font-size: 13px;
-      color: #6c63ff; font-weight: 600;
+    .profile-btn {
+      padding: 7px 16px; background: transparent;
+      border: 1px solid #2a2a4a; border-radius: 8px;
+      color: #aaa; font-size: 13px; cursor: pointer; transition: all 0.2s;
+      text-decoration: none;
     }
+    .profile-btn:hover { border-color: #6c63ff; color: #6c63ff; }
     .logout-btn {
       padding: 7px 16px; background: transparent;
       border: 1px solid #444; border-radius: 8px;
@@ -169,7 +171,7 @@
       <span class="user-fullname" id="user-fullname">...</span>
       <span class="user-meta" id="user-meta">...</span>
     </div>
-    <div class="score-badge" id="user-score">⭐ 0 puan</div>
+    <a class="profile-btn" href="/profile.html">👤 Profil</a>
     <button class="logout-btn" onclick="handleLogout()">Çıkış Yap</button>
   </div>
 </div>
@@ -213,9 +215,6 @@
       (user.firstName || '') + ' ' + (user.lastName || '');
     document.getElementById('user-meta').textContent =
       '@' + user.username + ' · ' + user.email;
-    document.getElementById('user-score').textContent =
-      '⭐ ' + (user.total_score || 0) + ' puan';
-
     // Kullanıcı doğrulandıktan sonra oyunları yükle
     await loadGames();
   }
