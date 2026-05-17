@@ -3,6 +3,7 @@ const session = require('express-session');
 const path = require('path');
 
 const authRoutes = require('./src/routes/auth');
+const gameRoutes = require('./src/routes/games'); // YENİ
 
 const app = express();
 const PORT = process.env.PORT || 8080;
@@ -20,8 +21,6 @@ app.use(session({
   },
 }));
 
-// Korumalı sayfalara cache header'ı ekle
-// Tarayıcı geri tuşuyla döndüğünde bu sayfaları cache'den değil sunucudan alsın
 app.use('/leaderboard.html', (req, res, next) => {
   res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
   res.setHeader('Pragma', 'no-cache');
@@ -31,6 +30,7 @@ app.use('/leaderboard.html', (req, res, next) => {
 
 app.use(express.static(path.join(__dirname, 'public')));
 app.use('/api/auth', authRoutes);
+app.use('/api/games', gameRoutes); // YENİ
 
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));

@@ -1,0 +1,52 @@
+{
+  "games": [
+    {
+      "id": 1,
+      "name": "Stack Towers",
+      "type": "Strateji",
+      "image": "https://placehold.co/300x180/6c63ff/fff?text=Stack+Towers",
+      "description": "Kuleleri dengede tut, en yükseğe çık!",
+      "playUrl": "#"
+    },
+    {
+      "id": 2,
+      "name": "Speed Typer",
+      "type": "Beceri",
+      "image": "https://placehold.co/300x180/ff6384/fff?text=Speed+Typer",
+      "description": "Hız yazma yarışması. En hızlı sen misin?",
+      "playUrl": "#"
+    },
+    {
+      "id": 3,
+      "name": "Math Blitz",
+      "type": "Zeka",
+      "image": "https://placehold.co/300x180/36a2eb/fff?text=Math+Blitz",
+      "description": "Matematik sorularını hızlıca çöz!",
+      "playUrl": "#"
+    },
+    {
+      "id": 4,
+      "name": "Memory Match",
+      "type": "Hafıza",
+      "image": "https://placehold.co/300x180/4bc0c0/fff?text=Memory+Match",
+      "description": "Kartları eşleştir, hafızanı test et.",
+      "playUrl": "#"
+    },
+    {
+      "id": 5,
+      "name": "Word Hunt",
+      "type": "Kelime",
+      "image": "https://placehold.co/300x180/ff9f40/fff?text=Word+Hunt",
+      "description": "Gizli kelimeleri bul, puan kazan!",
+      "playUrl": "#"
+    },
+    {
+      "id": 6,
+      "name": "Color Rush",
+      "type": "Refleks",
+      "image": "https://placehold.co/300x180/9966ff/fff?text=Color+Rush",
+      "description": "Renklere göre hızlı tepki ver!",
+      "playUrl": "#"
+    }
+  ]
+}

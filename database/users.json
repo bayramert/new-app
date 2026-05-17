@@ -10,6 +10,17 @@
       "role": "user",
       "total_score": 0,
       "created_at": "2026-05-16T14:34:19.108Z"
+    },
+    {
+      "id": 1779009207802,
+      "firstName": "ataberk",
+      "lastName": "kosger",
+      "username": "ataberkkosger",
+      "email": "ata@berk.com",
+      "password": "$2a$10$MLChFfmCjBNKjI1sorBTXuGCx5vQTFwmaM7XQ6rUNgcWp5AZnsMPG",
+      "role": "user",
+      "total_score": 0,
+      "created_at": "2026-05-17T09:13:27.802Z"
     }
   ]
 }

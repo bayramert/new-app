@@ -4,18 +4,14 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Oyun Sitesi - Sıralama</title>
-
-  <!-- Tarayıcının bu sayfayı cache'e almasını engelle -->
-  <!-- Geri tuşuyla girilince bile her seferinde sunucudan kontrol et -->
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
   <meta http-equiv="Pragma" content="no-cache">
   <meta http-equiv="Expires" content="0">
-
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body { font-family: 'Segoe UI', sans-serif; background: #0f0f1a; color: #e0e0e0; min-height: 100vh; }
 
-    /* Üst bar */
+    /* ── TOPBAR ── */
     .topbar {
       background: #1a1a2e;
       border-bottom: 1px solid #2a2a4a;
@@ -25,118 +21,307 @@
       justify-content: space-between;
     }
     .topbar-left h1 { font-size: 18px; color: #fff; }
-
-    /* Sağ üstteki kullanıcı bilgi alanı */
     .topbar-right { display: flex; align-items: center; gap: 12px; }
-    .user-info {
-      display: flex;
-      flex-direction: column;
-      align-items: flex-end;
-      gap: 2px;
-    }
+    .user-info { display: flex; flex-direction: column; align-items: flex-end; gap: 2px; }
     .user-fullname { font-size: 14px; font-weight: 600; color: #fff; }
     .user-meta { font-size: 12px; color: #888; }
-
-    /* Puan rozeti */
     .score-badge {
-      background: #2a2a4a;
-      border-radius: 20px;
-      padding: 5px 14px;
-      font-size: 13px;
-      color: #6c63ff;
-      font-weight: 600;
+      background: #2a2a4a; border-radius: 20px;
+      padding: 5px 14px; font-size: 13px;
+      color: #6c63ff; font-weight: 600;
+    }
+    .logout-btn {
+      padding: 7px 16px; background: transparent;
+      border: 1px solid #444; border-radius: 8px;
+      color: #aaa; font-size: 13px; cursor: pointer; transition: all 0.2s;
+    }
+    .logout-btn:hover { border-color: #e07070; color: #e07070; }
+
+    /* ── MAIN ── */
+    .main { max-width: 1100px; margin: 36px auto; padding: 0 20px; }
+
+    /* ── ARAMA + FİLTRE BARI ── */
+    .filter-bar {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 28px;
+      flex-wrap: wrap;
+      align-items: center;
     }
 
-    .logout-btn {
-      padding: 7px 16px;
-      background: transparent;
-      border: 1px solid #444;
+    .search-input {
+      flex: 1;
+      min-width: 200px;
+      padding: 10px 16px;
+      background: #1a1a2e;
+      border: 1px solid #2a2a4a;
       border-radius: 8px;
+      color: #fff;
+      font-size: 14px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .search-input:focus { border-color: #6c63ff; }
+    .search-input::placeholder { color: #555; }
+
+    /* Kategori butonları */
+    .category-filters { display: flex; gap: 8px; flex-wrap: wrap; }
+    .cat-btn {
+      padding: 8px 16px;
+      background: #1a1a2e;
+      border: 1px solid #2a2a4a;
+      border-radius: 20px;
       color: #aaa;
       font-size: 13px;
       cursor: pointer;
       transition: all 0.2s;
+      white-space: nowrap;
     }
-    .logout-btn:hover { border-color: #e07070; color: #e07070; }
+    .cat-btn:hover { border-color: #6c63ff; color: #fff; }
+    .cat-btn.active { background: #6c63ff; border-color: #6c63ff; color: #fff; }
 
-    /* İçerik alanı */
-    .main { max-width: 800px; margin: 40px auto; padding: 0 20px; }
-    .placeholder { text-align: center; color: #555; font-size: 15px; padding: 60px 0; }
+    /* ── OYUN KARTLARI GRİDİ ── */
+    .games-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 20px;
+    }
+
+    /* Tek kart */
+    .game-card {
+      background: #1a1a2e;
+      border: 1px solid #2a2a4a;
+      border-radius: 14px;
+      overflow: hidden;
+      transition: transform 0.2s, border-color 0.2s;
+      display: flex;
+      flex-direction: column;
+    }
+    .game-card:hover { transform: translateY(-4px); border-color: #6c63ff; }
+
+    .game-card img {
+      width: 100%;
+      height: 160px;
+      object-fit: cover;
+      display: block;
+    }
+
+    .card-body { padding: 16px; flex: 1; display: flex; flex-direction: column; gap: 8px; }
+
+    .card-header { display: flex; justify-content: space-between; align-items: flex-start; }
+    .card-title { font-size: 16px; font-weight: 700; color: #fff; }
+    .card-type {
+      font-size: 11px;
+      padding: 3px 10px;
+      background: #2a2a4a;
+      border-radius: 12px;
+      color: #6c63ff;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+
+    .card-desc { font-size: 13px; color: #888; line-height: 1.5; flex: 1; }
+
+    .play-btn {
+      margin-top: 10px;
+      padding: 10px;
+      background: #6c63ff;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s;
+      text-align: center;
+      text-decoration: none;
+      display: block;
+    }
+    .play-btn:hover { background: #574fd6; }
+
+    /* Boş durum */
+    .empty-state {
+      grid-column: 1 / -1;
+      text-align: center;
+      color: #555;
+      font-size: 15px;
+      padding: 60px 0;
+    }
+
+    /* Yüklenme */
+    .loading {
+      text-align: center;
+      color: #555;
+      font-size: 15px;
+      padding: 60px 0;
+    }
   </style>
 </head>
 <body>
 
-<!-- Üst bar -->
+<!-- ── TOPBAR ── -->
 <div class="topbar">
   <div class="topbar-left">
     <h1>🎮 Oyun Sitesi</h1>
   </div>
   <div class="topbar-right">
-
-    <!-- Kullanıcı bilgileri: ad soyad, @kullanıcıadı ve email -->
     <div class="user-info">
       <span class="user-fullname" id="user-fullname">...</span>
       <span class="user-meta" id="user-meta">...</span>
     </div>
-
-    <!-- Toplam puan -->
     <div class="score-badge" id="user-score">⭐ 0 puan</div>
-
-    <!-- Çıkış butonu -->
     <button class="logout-btn" onclick="handleLogout()">Çıkış Yap</button>
   </div>
 </div>
 
-<!-- Sayfa içeriği buraya gelecek -->
+<!-- ── MAIN ── -->
 <div class="main">
-  <div class="placeholder">🏆 Sıralama tablosu yakında burada olacak!</div>
+
+  <!-- Arama + Kategori filtre barı -->
+  <div class="filter-bar">
+    <input
+      class="search-input"
+      type="text"
+      id="search-input"
+      placeholder="🔍 Oyun ara..."
+    >
+    <div class="category-filters" id="category-filters">
+      <!-- Kategori butonları JS ile oluşturulacak -->
+    </div>
+  </div>
+
+  <!-- Oyun kartları grid -->
+  <div class="games-grid" id="games-grid">
+    <div class="loading">Oyunlar yükleniyor...</div>
+  </div>
+
 </div>
 
 <script>
-  // Oturum kontrolü yap ve kullanıcı bilgilerini ekrana bas
+  // ── Aktif kategori filtresi ──
+  let activeType = 'Tümü';
+  // ── Debounce timer ──
+  let searchTimer = null;
+
+  // ── Oturum kontrolü + kullanıcı bilgilerini doldur ──
   async function init() {
     const res = await fetch('/api/auth/me');
-
-    // Giriş yapılmamışsa veya session süresi dolmuşsa ana sayfaya gönder
     if (!res.ok) { window.location.href = '/'; return; }
 
-    const data = await res.json();
-    const user = data.user;
-
-    // Sağ üste ad soyad yaz
-    // firstName veya lastName yoksa (eski kayıtlar) boş string kullan
+    const { user } = await res.json();
     document.getElementById('user-fullname').textContent =
       (user.firstName || '') + ' ' + (user.lastName || '');
-
-    // @kullanıcıadı · email formatında göster
     document.getElementById('user-meta').textContent =
       '@' + user.username + ' · ' + user.email;
-
-    // Toplam puanı göster
     document.getElementById('user-score').textContent =
       '⭐ ' + (user.total_score || 0) + ' puan';
+
+    // Kullanıcı doğrulandıktan sonra oyunları yükle
+    await loadGames();
   }
 
-  // Çıkış yap: session'ı sil, ana sayfaya dön
+  // ── API'den oyunları çek ve kartları çiz ──
+  async function loadGames() {
+    const search = document.getElementById('search-input').value.trim();
+
+    // Query string oluştur
+    const params = new URLSearchParams();
+    if (activeType !== 'Tümü') params.set('type', activeType);
+    if (search) params.set('search', search);
+
+    try {
+      const res = await fetch('/api/games?' + params.toString());
+      if (!res.ok) throw new Error();
+      const { games } = await res.json();
+      renderGames(games);
+      renderCategories(games, search);
+    } catch {
+      document.getElementById('games-grid').innerHTML =
+        '<div class="empty-state">Oyunlar yüklenemedi.</div>';
+    }
+  }
+
+  // ── Oyun kartlarını DOM'a yaz ──
+  function renderGames(games) {
+    const grid = document.getElementById('games-grid');
+
+    if (games.length === 0) {
+      grid.innerHTML = '<div class="empty-state">🎮 Bu kriterlere uygun oyun bulunamadı.</div>';
+      return;
+    }
+
+    grid.innerHTML = games.map(g => `
+      <div class="game-card">
+        <img src="${g.image}" alt="${g.name}" loading="lazy">
+        <div class="card-body">
+          <div class="card-header">
+            <span class="card-title">${g.name}</span>
+            <span class="card-type">${g.type}</span>
+          </div>
+          <p class="card-desc">${g.description}</p>
+          <a class="play-btn" href="${g.playUrl}">▶ Oyna</a>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  // ── Kategori butonlarını oluştur ──
+  // Tüm oyunları (filtresiz) bir kez alıp kategorileri çıkarmak için
+  // ilk yüklemede tüm oyunları da çekiyoruz
+  async function renderCategories(filteredGames, search) {
+    // Kategorileri her zaman tüm oyunlardan türet (arama varsa bile)
+    // Bunun için kategoriler zaten ilk yüklemede set edildi
+    // Sadece ilk çağrıda oluştur
+    if (document.getElementById('category-filters').children.length > 0) return;
+
+    // Tüm oyunları çek (kategori listesi için)
+    const res = await fetch('/api/games');
+    if (!res.ok) return;
+    const { games: allGames } = await res.json();
+
+    // Benzersiz türleri çıkar
+    const types = ['Tümü', ...new Set(allGames.map(g => g.type))];
+
+    const container = document.getElementById('category-filters');
+    container.innerHTML = types.map(type => `
+      <button
+        class="cat-btn ${type === activeType ? 'active' : ''}"
+        onclick="selectCategory('${type}')"
+      >${type}</button>
+    `).join('');
+  }
+
+  // ── Kategori seç ──
+  function selectCategory(type) {
+    activeType = type;
+
+    // Aktif butonu güncelle
+    document.querySelectorAll('.cat-btn').forEach(btn => {
+      btn.classList.toggle('active', btn.textContent === type);
+    });
+
+    loadGames();
+  }
+
+  // ── Arama input'u — debounce ile 300ms bekle ──
+  document.getElementById('search-input').addEventListener('input', () => {
+    clearTimeout(searchTimer);
+    searchTimer = setTimeout(loadGames, 300);
+  });
+
+  // ── Çıkış ──
   async function handleLogout() {
     await fetch('/api/auth/logout', { method: 'POST' });
-
-    // replace: geri tuşuyla bu sayfaya dönülemesin
     window.location.replace('/');
   }
 
-  // Sayfa ilk açılınca oturum kontrolü yap
-  init();
-
-  // Geri tuşuyla cache'den dönüldüğünde de oturum kontrolü yap
-  // e.persisted: true ise sayfa cache'den yüklendi (geri tuşu) demektir
+  // ── Geri tuşu cache koruması ──
   window.addEventListener('pageshow', (e) => {
-    if (e.persisted) {
-      // Cache'den geldiyse oturumu tekrar kontrol et
-      // Session yoksa init() ana sayfaya yönlendirir
-      init();
-    }
+    if (e.persisted) init();
   });
+
+  // ── Başlat ──
+  init();
 </script>
 
 </body>
