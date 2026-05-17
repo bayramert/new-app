@@ -5,6 +5,7 @@ const path = require('path');
 const authRoutes = require('./src/routes/auth');
 const gameRoutes = require('./src/routes/games');
 const userRoutes = require('./src/routes/users');
+const adminRoutes = require('./src/routes/admin');
 const leaderboardRoutes = require('./src/routes/leaderboard');
 
 const app = express();
@@ -34,6 +35,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/api/auth', authRoutes);
 app.use('/api/games', gameRoutes);
 app.use('/api/users', userRoutes);
+app.use('/api/admin', adminRoutes);
 app.use('/api/leaderboard', leaderboardRoutes);
 
 app.get('/', (req, res) => {

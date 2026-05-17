@@ -270,6 +270,84 @@
           "totalEarned": 134848,
           "totalClicks": 1178,
           "perClick": 86
+      "userId": 1779030892954,
+      "gameId": "flappy-cat",
+      "savedAt": "2026-05-17T15:15:22.609Z",
+      "data": {
+        "bestScore": 4
+      }
+    },
+    {
+      "userId": 1779030892954,
+      "gameId": "cat-clicker",
+      "savedAt": "2026-05-17T15:16:37.224Z",
+      "resetAt": "2026-05-17T15:16:37.224Z",
+      "resetByAdmin": true,
+      "data": {
+        "state": {
+          "currency": 0,
+          "totalEarned": 0,
+          "totalClicks": 0,
+          "perClick": 1
+        },
+        "upgrades": [
+          {
+            "id": "u1",
+            "purchased": false
+          },
+          {
+            "id": "u2",
+            "purchased": false
+          },
+          {
+            "id": "u3",
+            "purchased": false
+          },
+          {
+            "id": "u4",
+            "purchased": false
+          },
+          {
+            "id": "u5",
+            "purchased": false
+          }
+        ],
+        "autoClickers": [
+          {
+            "id": "a1",
+            "count": 0
+          },
+          {
+            "id": "a2",
+            "count": 0
+          },
+          {
+            "id": "a3",
+            "count": 0
+          },
+          {
+            "id": "a4",
+            "count": 0
+          },
+          {
+            "id": "a5",
+            "count": 0
+          }
+        ]
+      }
+    },
+    {
+      "userId": 1779030855254,
+      "gameId": "cat-clicker",
+      "savedAt": "2026-05-17T15:16:09.602Z",
+      "resetAt": "2026-05-17T15:16:09.602Z",
+      "resetByAdmin": true,
+      "data": {
+        "state": {
+          "currency": 0,
+          "totalEarned": 0,
+          "totalClicks": 0,
+          "perClick": 1
         },
         "upgrades": [
           {
@@ -291,6 +369,23 @@
           {
             "id": "u5",
             "purchased": true
+            "purchased": false
+          },
+          {
+            "id": "u2",
+            "purchased": false
+          },
+          {
+            "id": "u3",
+            "purchased": false
+          },
+          {
+            "id": "u4",
+            "purchased": false
+          },
+          {
+            "id": "u5",
+            "purchased": false
           }
         ],
         "autoClickers": [
@@ -313,6 +408,23 @@
           {
             "id": "a5",
             "count": 4
+            "count": 0
+          },
+          {
+            "id": "a2",
+            "count": 0
+          },
+          {
+            "id": "a3",
+            "count": 0
+          },
+          {
+            "id": "a4",
+            "count": 0
+          },
+          {
+            "id": "a5",
+            "count": 0
           }
         ]
       }

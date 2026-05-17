@@ -151,8 +151,10 @@
 </div>
 
 <script>
-  fetch('/api/auth/me').then(r => {
-    if (r.ok) window.location.href = '/games.html';
+  fetch('/api/auth/me').then(async r => {
+    if (!r.ok) return;
+    const data = await r.json();
+    window.location.href = data.user && data.user.role === 'admin' ? '/admin.html' : '/games.html';
   });
 
   // Sekme değiştirme
@@ -195,7 +197,7 @@
 
       if (res.ok) {
         showMessage('login-message', data.message, 'success');
-        setTimeout(() => window.location.href = '/games.html', 800);
+        setTimeout(() => window.location.href = data.user && data.user.role === 'admin' ? '/admin.html' : '/games.html', 800);
       } else {
         showMessage('login-message', data.message, 'error');
       }
