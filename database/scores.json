@@ -1,0 +1,134 @@
+{
+  "saves": [
+    {
+      "userId": 1779009207802,
+      "gameId": "cat-clicker",
+      "savedAt": "2026-05-17T10:37:47.999Z",
+      "data": {
+        "state": {
+          "currency": 361,
+          "totalEarned": 562,
+          "totalClicks": 122,
+          "perClick": 3
+        },
+        "upgrades": [
+          {
+            "id": "u1",
+            "purchased": true
+          },
+          {
+            "id": "u2",
+            "purchased": false
+          },
+          {
+            "id": "u3",
+            "purchased": false
+          },
+          {
+            "id": "u4",
+            "purchased": false
+          },
+          {
+            "id": "u5",
+            "purchased": false
+          }
+        ],
+        "autoClickers": [
+          {
+            "id": "a1",
+            "count": 3
+          },
+          {
+            "id": "a2",
+            "count": 1
+          },
+          {
+            "id": "a3",
+            "count": 0
+          },
+          {
+            "id": "a4",
+            "count": 0
+          },
+          {
+            "id": "a5",
+            "count": 0
+          }
+        ]
+      }
+    },
+    {
+      "userId": 1778942059108,
+      "gameId": "cat-clicker",
+      "savedAt": "2026-05-17T13:06:14.104Z",
+      "data": {
+        "state": {
+          "currency": 46,
+          "totalEarned": 78,
+          "totalClicks": 70,
+          "perClick": 1
+        },
+        "upgrades": [
+          {
+            "id": "u1",
+            "purchased": false
+          },
+          {
+            "id": "u2",
+            "purchased": false
+          },
+          {
+            "id": "u3",
+            "purchased": false
+          },
+          {
+            "id": "u4",
+            "purchased": false
+          },
+          {
+            "id": "u5",
+            "purchased": false
+          }
+        ],
+        "autoClickers": [
+          {
+            "id": "a1",
+            "count": 2
+          },
+          {
+            "id": "a2",
+            "count": 0
+          },
+          {
+            "id": "a3",
+            "count": 0
+          },
+          {
+            "id": "a4",
+            "count": 0
+          },
+          {
+            "id": "a5",
+            "count": 0
+          }
+        ]
+      }
+    },
+    {
+      "userId": 1779009207802,
+      "gameId": "flappy-cat",
+      "savedAt": "2026-05-17T11:04:26.091Z",
+      "data": {
+        "bestScore": 27
+      }
+    },
+    {
+      "userId": 1778942059108,
+      "gameId": "flappy-cat",
+      "savedAt": "2026-05-17T13:06:44.439Z",
+      "data": {
+        "bestScore": 13
+      }
+    }
+  ]
+}
