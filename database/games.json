@@ -2,11 +2,11 @@
   "games": [
     {
       "id": 1,
-      "name": "Stack Towers",
-      "type": "Strateji",
-      "image": "https://placehold.co/300x180/6c63ff/fff?text=Stack+Towers",
-      "description": "Kuleleri dengede tut, en yükseğe çık!",
-      "playUrl": "#"
+      "name": "Cat Clicker",
+      "type": "Refleks",
+      "image": "/images/kedy.png",
+      "description": "KEDY",
+      "playUrl": "/cat_clicker.html"
     },
     {
       "id": 2,
