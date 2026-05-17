@@ -38,6 +38,7 @@
       color: #aaa; font-size: 13px; cursor: pointer; transition: all 0.2s;
     }
     .logout-btn:hover { border-color: #e07070; color: #e07070; }
+    .admin-btn { display: none; }
 
     /* ── MAIN ── */
     .main { max-width: 1100px; margin: 36px auto; padding: 0 20px; }
@@ -172,6 +173,7 @@
       <span class="user-meta" id="user-meta">...</span>
     </div>
     <a class="profile-btn" href="/profile.html">👤 Profil</a>
+    <a class="profile-btn admin-btn" id="admin-link" href="/admin.html">Admin</a>
     <button class="logout-btn" onclick="handleLogout()">Çıkış Yap</button>
   </div>
 </div>
@@ -197,6 +199,11 @@
     <div class="loading">Oyunlar yükleniyor...</div>
   </div>
 
+  <div style="margin-top:32px;">
+    <h2 style="font-size:18px;color:#fff;margin-bottom:14px;">Leaderboard</h2>
+    <div class="games-grid" id="leaderboard-list"></div>
+  </div>
+
 </div>
 
 <script>
@@ -215,8 +222,10 @@
       (user.firstName || '') + ' ' + (user.lastName || '');
     document.getElementById('user-meta').textContent =
       '@' + user.username + ' · ' + user.email;
+    if (user.role === 'admin') document.getElementById('admin-link').style.display = 'inline-block';
     // Kullanıcı doğrulandıktan sonra oyunları yükle
     await loadGames();
+    await loadLeaderboards();
   }
 
   // ── API'den oyunları çek ve kartları çiz ──
@@ -307,6 +316,34 @@
     clearTimeout(searchTimer);
     searchTimer = setTimeout(loadGames, 300);
   });
+
+  async function loadLeaderboards() {
+    const games = [
+      { id: 'cat-clicker', name: 'Dans Eden KEDY' },
+      { id: 'flappy-cat', name: 'Ucan KEDY' },
+    ];
+
+    const sections = await Promise.all(games.map(async game => {
+      const res = await fetch('/api/leaderboard/' + game.id);
+      if (!res.ok) {
+        return `<div class="game-card"><div class="card-body"><div class="card-title">${game.name}</div><p class="card-desc">Leaderboard yuklenemedi.</p></div></div>`;
+      }
+
+      const { leaderboard } = await res.json();
+      const rows = leaderboard.length
+        ? leaderboard.slice(0, 5).map((row, index) => `
+            <div style="display:flex;justify-content:space-between;gap:10px;font-size:13px;color:#aaa;padding:7px 0;border-bottom:1px solid #2a2a4a;">
+              <span>${index + 1}. @${row.username}${row.resetByAdmin ? ' (sifirlandi)' : ''}</span>
+              <strong style="color:#fff;">${row.score.toLocaleString('tr-TR')}</strong>
+            </div>
+          `).join('')
+        : '<p class="card-desc">Henuz skor yok.</p>';
+
+      return `<div class="game-card"><div class="card-body"><div class="card-title">${game.name}</div>${rows}</div></div>`;
+    }));
+
+    document.getElementById('leaderboard-list').innerHTML = sections.join('');
+  }
 
   // ── Çıkış ──
   async function handleLogout() {

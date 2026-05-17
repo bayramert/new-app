@@ -26,4 +26,12 @@ function isAdmin(req, res, next) {
 }
 
 // İki fonksiyonu dışarıya aktar
-module.exports = { isLoggedIn, isAdmin };
+function isNotBanned(req, res, next) {
+  if (req.session && req.session.user && req.session.user.banned) {
+    return res.status(403).json({ message: 'Hesabin yasaklanmis.' });
+  }
+
+  return next();
+}
+
+module.exports = { isLoggedIn, isAdmin, isNotBanned };
