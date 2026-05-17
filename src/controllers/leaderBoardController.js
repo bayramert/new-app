@@ -20,8 +20,6 @@ const GAME_META = {
     label: 'Puan',
     getScore: data => (Number(data?.wins) || 0) * 3 + (Number(data?.draws) || 0),
   },
-  'cat-clicker': { name: 'Dans Eden KEDY', label: 'Para', getScore: data => data?.state?.totalEarned ?? 0 },
-  'flappy-cat': { name: 'Ucan KEDY', label: 'En Iyi Skor', getScore: data => data?.bestScore ?? 0 },
 };
 
 function readScores() {
@@ -29,12 +27,15 @@ function readScores() {
   return JSON.parse(fs.readFileSync(SCORES_PATH, 'utf-8'));
 }
 
-function buildLeaderboard(currentUserId) {
+function buildLeaderboard(currentUserId, gameId = null) {
   const usersDb = readDB();
   const scoresDb = readScores();
 
   const rows = usersDb.users.map(user => {
-    const userSaves = scoresDb.saves.filter(save => save.userId === user.id);
+    const userSaves = scoresDb.saves.filter(save => {
+      if (save.userId !== user.id) return false;
+      return !gameId || save.gameId === gameId;
+    });
     const games = userSaves.map(save => {
       const meta = GAME_META[save.gameId] || {
         name: save.gameId,
@@ -82,9 +83,10 @@ function getLeaderboard(req, res) {
   const page = Math.max(parseInt(req.query.page, 10) || 1, 1);
   const limit = Math.min(Math.max(parseInt(req.query.limit, 10) || 10, 1), 50);
   const currentUserId = req.session.user.id;
+  const gameId = req.params.gameId || null;
 
   try {
-    const leaderboard = buildLeaderboard(currentUserId);
+    const leaderboard = buildLeaderboard(currentUserId, gameId);
     const total = leaderboard.length;
     const totalPages = Math.max(Math.ceil(total / limit), 1);
     const start = (page - 1) * limit;
@@ -102,33 +104,6 @@ function getLeaderboard(req, res) {
       },
       currentUser,
     });
-function getLeaderboard(req, res) {
-  const { gameId } = req.params;
-
-  try {
-    const usersDb = readDB();
-    const scoresDb = readScores();
-    const meta = GAME_META[gameId] || { name: gameId, label: 'Skor', getScore: data => data?.score ?? 0 };
-
-    const leaderboard = scoresDb.saves
-      .filter(save => save.gameId === gameId)
-      .map(save => {
-        const user = usersDb.users.find(item => item.id === save.userId);
-        return {
-          userId: save.userId,
-          username: user ? user.username : 'silinmis-kullanici',
-          gameId,
-          gameName: meta.name,
-          label: meta.label,
-          score: meta.getScore(save.data),
-          savedAt: save.savedAt,
-          resetAt: save.resetAt || null,
-          resetByAdmin: Boolean(save.resetByAdmin),
-        };
-      })
-      .sort((a, b) => b.score - a.score || new Date(b.savedAt) - new Date(a.savedAt));
-
-    return res.status(200).json({ leaderboard });
   } catch (err) {
     console.error('getLeaderboard hatasi:', err);
     return res.status(500).json({ message: 'Sunucu hatasi.' });
